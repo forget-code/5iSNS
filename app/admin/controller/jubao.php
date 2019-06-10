@@ -13,7 +13,7 @@ if (empty($action) || $action == 'list') {
 
 
     $pagenum    = $conf['pagesize'];
-    $jubaolist   = db_find('jubao',$where, '', $page, $pagenum);
+    $jubaolist   = db_find('jubao',$where, array('id'=>-1), $page, $pagenum);
     $totalnum   = db_count('jubao',$where);
     $pagination = pagination(r_url('message-list', array('page' => 'pagenum')), $totalnum, $page, $pagenum);
     include ADMIN_PATH . "view/jubao_list.html";

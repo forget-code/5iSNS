@@ -18,7 +18,7 @@ if (empty($action) || $action == 'list') {
     $where = array('status' => array('>=' => 0));
 
     $pagenum    = $conf['pagesize'];
-    $usergradeslist   = db_find('usergrade',$where, '', $page, $pagenum);
+    $usergradeslist   = db_find('usergrade',$where, array('create_time'=>-1), $page, $pagenum);
     $totalnum   = db_count('usergrade',$where);
     $pagination = pagination(r_url('usergrade-list', array('page' => 'pagenum')), $totalnum, $page, $pagenum);
     include ADMIN_PATH . "view/usergrade_list.html";

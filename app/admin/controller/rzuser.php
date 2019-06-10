@@ -14,7 +14,7 @@ if (empty($action) || $action == 'list') {
     $where = array('status' => array('>=' => 0));
 
     $pagenum    = $conf['pagesize'];
-    $rzuserlist   = db_find('rzuser',$where, '', $page, $pagenum);
+    $rzuserlist   = db_find('rzuser',$where, array('create_time'=>-1), $page, $pagenum);
     $totalnum   = db_count('rzuser',$where);
     $pagination = pagination(r_url('rzuser-list', array('page' => 'pagenum')), $totalnum, $page, $pagenum);
     include ADMIN_PATH . "view/rzuser_list.html";

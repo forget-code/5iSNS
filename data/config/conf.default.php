@@ -141,7 +141,7 @@ return array (
   'url_rewrite_on' => 0,
   'index_theme_name' => 'default',
   'disabled_plugin' => 0,
-  'version' => '1.0.3',
+  'version' => '1.0.4',
   'static_version' => '?1.0',
   'cdn_use' => 0,
   'online_trans' => 0,

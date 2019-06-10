@@ -208,7 +208,10 @@ $(this).closest('li').remove();
         tags.push($(this).text());
       });
       $("input[name=" + name + "]").val(tags.join(","));
-      $("#tpt_pre a:contains('" + tag + "')").removeClass("selected");
+      $("#tpt_pre a:contains('" + tag + "')").map(function(){ 
+        if ($(this).text() == tag) { $(this).removeClass("selected"); } 
+        }); 
+      //$("#tpt_pre a:contains('" + tag + "')").removeClass("selected");
     });
     function showkeyword(){
             var name = "keywords";
@@ -221,12 +224,21 @@ $(this).closest('li').remove();
       var tag = $.trim($("#tpt_input").val());
       if (tag !== '' && $.inArray(tag, tags) === -1) {
         tags.push(tag);
-        $("#tpt_pre a:contains('" + tag + "')").addClass("selected");
+        $("#tpt_pre a:contains('" + tag + "')").map(function(){ 
+        if ($(this).text() == tag) { $(this).addClass("selected"); } 
+        }); 
+        //$("#tpt_pre a:contains('" + tag + "')").addClass("selected");
       }
       $("#tpt_sel").children('span').empty();
       $.each(tags, function(k, v) {
+
         $("#tpt_sel").children('span').append('<a href="javascript:;">' + v + '<i class="fa fa-times"></i></a>');
-        $("#tpt_pre a:contains('" + v + "')").addClass("selected");
+        $("#tpt_pre a:contains('" + v + "')").map(function(){ 
+        if ($(this).text() == v) { $(this).addClass("selected"); } 
+        }); 
+
+
+        //$("#tpt_pre a:contains('" + v + "')").addClass("selected");
       });
       $("input[name=" + name + "]").val(tags.join(","));
 
@@ -240,8 +252,8 @@ $(this).closest('li').remove();
             var length = $("#tpt_pre").find('a.selected').length;
       if(length>=3){
 
-       $.sns5i_notify('最多选择三个','danger');
-        return false;
+      // $.sns5i_notify('最多选择三个','danger');
+       // return false;
       }
       var name = "keywords";
       var tags = $.trim($("input[name=" + name + "]").val());
@@ -256,6 +268,7 @@ $(this).closest('li').remove();
       }
       $("#tpt_sel").children('span').empty();
       $.each(tags, function(k, v) {
+
         $("#tpt_sel").children('span').append('<a href="javascript:;">' + v + '<i class="fa fa-times"></i></a>');
       });
       $("input[name=" + name + "]").val(tags.join(","));

@@ -288,7 +288,7 @@ $realname = $uid . '_' . $sha1 . '.' . $ext;
         }
     }
 
-   
+  
 
     if($attach['type']==1){
 
@@ -324,6 +324,7 @@ $realname = $uid . '_' . $sha1 . '.' . $ext;
             $data['description'] = '下载'.$attach['name'];
             $data['uid'] = $uid;
             $data['to_uid'] = $thread['uid'];
+            $data['itemid'] = $thread['id'];
             point_note_op($attach['type'],$buy_score,'point','-',$data);
         
         
@@ -357,10 +358,12 @@ $realname = $uid . '_' . $sha1 . '.' . $ext;
         header('Date: ' . $timefmt);
         header('Last-Modified: ' . $timefmt);
         header('Expires: ' . $timefmt);
-        // header('Cache-control: max-age=0, must-revalidate, post-check=0, pre-check=0');
+        header('Cache-control: max-age=0, must-revalidate, post-check=0, pre-check=0');
         header('Cache-control: max-age=86400');
         header('Content-Transfer-Encoding: binary');
         header("Pragma: public");
+        header("Accept-Length: ".$filesize);
+        
         header('Content-Disposition: attachment; filename="' . $attach['name'] . '"');
         header('Content-Type: application/octet-stream');
         //header("Content-Type: application/force-download");    // 后面的会覆盖前面
@@ -369,8 +372,8 @@ $realname = $uid . '_' . $sha1 . '.' . $ext;
         flush();     //*******************修改部分*******************************
 
         readfile($attachpath);
-        clearstatcache();
-        ob_end_clean();
+       clearstatcache();
+       // ob_end_clean();
         exit;
     } else {
 

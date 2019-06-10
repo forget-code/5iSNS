@@ -4,12 +4,13 @@
 
 
 if($action == 'list'||empty($action)) {
+
 $hot_tags = topiccate_find(array('status' => 1), array('num'=>-1), 1, 6);
 $type = param(3,1);
 $id = param(2,0);
 $topiccate_info = topiccate_read($id);
 empty($topiccate_info) AND message(-1, '话题不存在');
-$page = param('page');
+$page = param('page',1);
 $idarr = andother_find_arr('tagsandother',$type,$id,'tid','did',true);
 empty($idarr) AND $idarr = 0;
 $where = array('status' => 1,'id'=>$idarr);
@@ -21,12 +22,12 @@ if($type==1){
 	$topicslist   = topic_find($where, $order, $page, $pagenum);
 
 $totalnum   = topic_count($where);
-$pagination = pagination(r_url('tags-list-'.$type, array('page' => 'pagenum')), $totalnum, $page, $pagenum);
+$pagination = pagination(r_url('tags-'.$id.'-'.$type, array('page' => 'pagenum')), $totalnum, $page, $pagenum);
 }else{//这里放文档
 	$topicslist   = doc_find($where, $order, $page, $pagenum);
 
     $totalnum   = doc_count($where);
-    $pagination = pagination(r_url('tags-list-'.$type, array('page' => 'pagenum')), $totalnum, $page, $pagenum);
+    $pagination = pagination(r_url('tags-'.$id.'-'.$type, array('page' => 'pagenum')), $totalnum, $page, $pagenum);
 }
 
 

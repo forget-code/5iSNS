@@ -38,23 +38,8 @@
 								</span>
 							<span class="pull-right">
 								
-								<span class="share-group ">
-								<a class="share-circle share-weixin" data-action="weixin-share" data-toggle="tooltip" data-original-title="分享到微信"
-								 target="_self">
-									<i class="fa fa-wechat"></i>
-								</a>
-								<a class="share-circle -mob-share-weibo" data-toggle="tooltip" href="#"
-								 data-original-title="分享到微博" target="_self">
-									<i class="fa fa-weibo"></i>
-								</a>
-
-
-
-
-								<a class="share-circle" data-toggle="tooltip" target="_self" data-original-title="分享到QQ空间" href="#"
-								 title=""> <i class="fa fa-qq"></i></a>
-
-							</span>
+							<?php $plugin->run('share','share',$thread); ?>
+  
 							
 							</span>
 						</p>
@@ -225,7 +210,19 @@ foreach($thread['keywords_arr'] as $k=>$v) { ?>
     	 <?php foreach($thread['filelistarr'] as $key=>$vo){ ?>
 <li>
 	<div><i class="fa <?php echo $vo['icon']; ?>"></i><?php echo $vo['name']; ?>
-		<a href="javascript:void(0)" data-title="下载该附件需要消耗<?php if($uid>0){echo floor($userqx['bili']*$vo['score']/100).$conf['pointname']['point'];}else{echo $vo['score'].$conf['pointname']['point'];} ?>,确定购买吗？" data-url="<?php echo r_url('attach-download-'.$vo['tid'].'-'.$vo['id']); ?>" class="confirm-download  text-primary" target="_blank">下载</a><span class="text-muted wi-margin-left">[下载：<?php echo $vo['downloads']; ?>次]</span></div>
+		<a href="javascript:void(0)" data-title="下载该附件需要消耗<?php if($uid>0){
+if(has_buy($uid,$thread['id'],$vo['type'])||$uid==$thread['uid']){
+	echo '0'.$conf['pointname']['point'];
+}else{
+	echo floor($userqx['bili']*$vo['score']/100).$conf['pointname']['point'];
+}
+			
+
+		}else{
+
+		echo $vo['score'].$conf['pointname']['point'];
+
+	} ?>,确定购买吗？" data-url="<?php echo r_url('attach-download-'.$vo['tid'].'-'.$vo['id']); ?>" class="confirm-download  text-primary" target="_blank">下载</a><span class="text-muted wi-margin-left">[下载：<?php echo $vo['downloads']; ?>次]</span></div>
 	<div class="text-muted"><span >上传者：<?php echo $vo['user']['nickname']; ?></span><span>大小：<?php echo $vo['size_fmt']; ?></span>
 
 		<span><?php if($vo['score']>0){echo $conf['pointname']['point'].':'.$vo['score'];}else{echo '免费';} ?></span>

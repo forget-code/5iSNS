@@ -7,11 +7,13 @@
 $uid = intval(_SESSION('uid'));
 empty($uid) AND $uid = user_token_get() AND $_SESSION['uid'] = $uid;
 
-$user = user_read_cache($uid);
+$user = user_read($uid);
 
 if($uid>0){
 	$user = up_usergrade($user);
+	
 	$userqx = user_qx_cache($uid);
+	
 }
 
 

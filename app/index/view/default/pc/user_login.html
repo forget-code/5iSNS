@@ -38,16 +38,7 @@
 
 </form>
    <!-- 更多登录方式 -->
-  <div class="more-sign hide">
-
-    <h6>社交帐号登录</h6>
-    <ul>
-          <li><a class="weibo" href="https://www.ask2.cn/plugin/sinalogin/index.php"><i class="fa fa-weibo "></i></a></li>
-            <li><a class="weixin" href="https://www.ask2.cn/plugin_weixin/openauth.html"><i class="fa fa-wechat "></i></a></li>
-       <li><a class="qq" href="https://www.ask2.cn/plugin/qqlogin/index.php"><i class="fa fa-qq "></i></a></li>
-             </ul>
-
-  </div>
+<?php $plugin->run('thirdlogin','login'); ?>
    </div>
 
     </div>

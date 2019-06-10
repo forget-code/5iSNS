@@ -13,7 +13,7 @@ if (empty($action) || $action == 'list') {
 
 
     $pagenum    = $conf['pagesize'];
-    $messagelist   = db_find('message',$where, '', $page, $pagenum);
+    $messagelist   = db_find('message',$where, array('id'=>-1), $page, $pagenum);
     $totalnum   = db_count('message',$where);
     $pagination = pagination(r_url('message-list', array('page' => 'pagenum')), $totalnum, $page, $pagenum);
     include ADMIN_PATH . "view/message_list.html";

@@ -15,7 +15,7 @@ if (empty($action) || $action == 'list') {
     $where = array('status' => array('>=' => 0));
 
     $pagenum    = $conf['pagesize'];
-    $tixian_list   = db_find('tixian',$where, '', $page, $pagenum);
+    $tixian_list   = db_find('tixian',$where, array('create_time'=>-1), $page, $pagenum);
     $totalnum   = db_count('tixian',$where);
     $pagination = pagination(r_url('tixian-list', array('page' => 'pagenum')), $totalnum, $page, $pagenum);
     include ADMIN_PATH . "view/tixian_list.html";

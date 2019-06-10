@@ -26,7 +26,7 @@ if (empty($action) || $action == 'list') {
         $page = 1;
     }
     $pagenum    = $conf['pagesize'];
-    $topiccatelist   = topiccate_find($where, '', $page, $pagenum);
+    $topiccatelist   = topiccate_find($where, array('create_time'=>-1), $page, $pagenum);
     $totalnum   = topiccate_count($where);
     
 

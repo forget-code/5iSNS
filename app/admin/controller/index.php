@@ -90,8 +90,11 @@ if (strpos($s, "\xEF\xBB\xBF") === 0) { //\x表示16进制
 		db_exec($sql) === FALSE AND message(-1, "sql: $sql, errno: $errno, errstr: $errstr");
 	}
 
-
+unlink($conf['upload_path'] . 'update/data.sql');
 }
+
+
+unlink($conf['upload_path'] . 'update/update.zip');
 $config['version'] = $result['version'];
 
 file_replace_var(DATA_PATH.'config/conf.default.php', $config);

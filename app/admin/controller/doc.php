@@ -15,7 +15,7 @@ if (empty($action) || $action == 'list') {
     
     $where = array('status' => array('>=' => 0));
 
-    if (!empty($name)) {
+    if (!empty($title)) {
 
         $where['title'] = array('LIKE' => $title);
 
@@ -28,7 +28,7 @@ if (empty($action) || $action == 'list') {
         $page = 1;
     }
     $pagenum    = $conf['pagesize'];
-    $topicslist   = doc_find($where, '', $page, $pagenum);
+    $topicslist   = doc_find($where, array('id'=>-1), $page, $pagenum);
     $totalnum   = doc_count($where);
     $pagination = pagination(r_url('doc-list', array('page' => 'pagenum')), $totalnum, $page, $pagenum);
     include ADMIN_PATH . "view/doc_list.html";

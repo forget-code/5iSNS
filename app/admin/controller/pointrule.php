@@ -8,7 +8,7 @@ if (empty($action) || $action == 'list') {
 	$page       = param('page', 1);
     $where = array('status'=>1);
     $pagenum    = $conf['pagesize'];
-    $pointrulelist   = db_find('point_rule',$where, '', $page, $pagenum);
+    $pointrulelist   = db_find('point_rule',$where, array('id'=>-1), $page, $pagenum);
     $totalnum   = db_count('point_rule',$where);
     $pagination = pagination(r_url('pointrule-list', array('page' => 'pagenum')), $totalnum, $page, $pagenum);
     

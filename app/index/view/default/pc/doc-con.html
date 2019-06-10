@@ -190,25 +190,9 @@ foreach($thread['keywords_arr'] as $k=>$v) { ?>
                       
                         <div class="pull-right">
                               <a href="javascript:void(0);" data-url="<?php echo r_url('attach-download-'.$thread['id'].'-'.$thread['fileid']); ?>" data-formid="download-form" data-id="downloadtpl"  data-width="400" data-height="320" data-title="文档下载"  target="_blank" class="openformdialog btn btn-primary btn-sm"><i class="fa fa-cloud-download"></i> 下载<span class="hidden-xs">原文档</span>(<?php echo humansize($thread['fileinfo']['size']); ?>)</a>
-                          
-                            <span class="share-group ">
-								<a class="share-circle share-weixin" data-action="weixin-share" data-toggle="tooltip" data-original-title="分享到微信"
-								 target="_self">
-									<i class="fa fa-wechat"></i>
-								</a>
-								<a class="share-circle" data-toggle="tooltip" href="#"
-								 data-original-title="分享到微博" target="_self">
-									<i class="fa fa-weibo"></i>
-								</a>
-
-
-
-
-								<a class="share-circle" data-toggle="tooltip" target="_self" data-original-title="分享到QQ空间" href="#"
-								 title=""> <i class="fa fa-qq"></i></a>
-
-							</span>
-                           
+                          <span class="pull-right">
+                            <?php $plugin->run('share','share',$thread); ?>
+                           </span>
                         </div>
                     </div>
 

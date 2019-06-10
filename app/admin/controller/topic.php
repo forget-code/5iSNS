@@ -13,7 +13,7 @@ if (empty($action) || $action == 'list') {
     
     $where = array('status' => array('>=' => 0));
 
-    if (!empty($name)) {
+    if (!empty($title)) {
 
         $where['title'] = array('LIKE' => $title);
 
@@ -26,7 +26,7 @@ if (empty($action) || $action == 'list') {
         $page = 1;
     }
     $pagenum    = $conf['pagesize'];
-    $topicslist   = topic_find($where, '', $page, $pagenum);
+    $topicslist   = topic_find($where, array('create_time'=>-1), $page, $pagenum);
     $totalnum   = topic_count($where);
     $pagination = pagination(r_url('topic-list', array('page' => 'pagenum')), $totalnum, $page, $pagenum);
     include ADMIN_PATH . "view/topic_list.html";

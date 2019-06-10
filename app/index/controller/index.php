@@ -2,7 +2,7 @@
 !defined('DEBUG') AND exit('Access Denied.');
 
 $type = param(2,1);
-$page = param('page');
+$page = param('page',1);
 
 $where = array('status' => 1,'img_num'=>array('>'=>0),'type'=>2);
 if($type==1){

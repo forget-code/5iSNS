@@ -28,7 +28,7 @@ if (empty($action) || $action == 'list') {
         $page = 1;
     }
     $pagenum    = $conf['pagesize'];
-    $tagslist   = tags_find($where, '', $page, $pagenum);
+    $tagslist   = tags_find($where, array('create_time'=>-1), $page, $pagenum);
     $totalnum   = tags_count($where);
     $pagination = pagination(r_url('tags-list', array('page' => 'pagenum')), $totalnum, $page, $pagenum);
     include ADMIN_PATH . "view/tags_list.html";

@@ -7,7 +7,7 @@ $hot_topiclist_6 = topic_find(array('status' => 1,'type'=>2), array('view'=>-1),
 if($action == 'list') {
 $hot_tags = topiccate_find(array('status' => 1), array('num'=>-1), 1, 6);
 $type = param(3,1);
-$page = param('page');
+$page = param('page',1);
 
 $where = array('status' => 1,'type'=>2);
 if($type==1){

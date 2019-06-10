@@ -13,7 +13,7 @@ if (empty($action) || $action == 'list') {
 
 
     $pagenum    = $conf['pagesize'];
-    $commentlist   = db_find('comment',$where, '', $page, $pagenum);
+    $commentlist   = db_find('comment',$where, array('create_time'=>-1), $page, $pagenum);
     $totalnum   = db_count('comment',$where);
     $pagination = pagination(r_url('topic_comment-list', array('page' => 'pagenum')), $totalnum, $page, $pagenum);
     include ADMIN_PATH . "view/comment_list.html";

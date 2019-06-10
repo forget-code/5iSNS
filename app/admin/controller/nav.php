@@ -28,7 +28,7 @@ if (empty($action) || $action == 'list') {
         $page = 1;
     }
     $pagenum    = $conf['pagesize'];
-    $navlist   = nav_find($where, '', $page, $pagenum);
+    $navlist   = nav_find($where, array('id'=>-1), $page, $pagenum);
     $totalnum   = nav_count($where);
     $pagination = pagination(r_url('nav-list', array('page' => 'pagenum')), $totalnum, $page, $pagenum);
     include ADMIN_PATH . "view/nav_list.html";

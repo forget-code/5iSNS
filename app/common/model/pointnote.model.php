@@ -11,7 +11,8 @@ $data['scoretype'] = $scoretype;
 $data['inctype'] = $inctype;
 $data['create_time'] = time();
 $data['status'] = 1;
-$r = db_create('point_note',$data);
+$r = db_insert('point_note',$data);
+
 if($r!==false){
 
 $data['uid']>0 AND $r1 = db_update('user_extend',array('uid'=>$data['uid']),array($scoretype.$inctype=>$score));
@@ -27,10 +28,12 @@ $data1['scoretype'] = $scoretype;
 $data1['inctype'] = $invsersetype;
 $data1['create_time'] = time();
 $data1['status'] = 1;
+$data1['itemid'] = $data['itemid'];
+
 if(!empty($data['description'])){
   $data1['description'] = $data['description'];  
 }
-db_create('point_note',$data1);
+db_insert('point_note',$data1);
 
 
 } 

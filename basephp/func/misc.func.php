@@ -1625,12 +1625,12 @@ function xn_url_parse($request_url)
     // 处理: /demo/user-login.htm?a=b&c=d
     $conf = _SERVER('conf');
     $nstr = str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME']));
-    $request_url = str_replace('/?', '/', $request_url);
+   // $request_url = str_replace('/?', '/', $request_url);
     if($nstr!='/'){
         $request_url = str_replace($nstr, '', $request_url);
     }
     
-   
+  
     substr($request_url, 0, 1) == '/' and $request_url = substr($request_url, 1);
      
     

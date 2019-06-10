@@ -94,7 +94,7 @@ if (strpos($s, "\xEF\xBB\xBF") === 0) {
 }
 
 
-public function run($name,$method) 
+public function run($name,$method,$data=array()) 
 {
 $result = '';
 
@@ -103,7 +103,7 @@ if($plugin_info){
 if(method_exists($name,$method))
 {
 
-$result .= $this->_listener[$name]->$method();
+$result .= $this->_listener[$name]->$method($data);
 }
 
 return $result;

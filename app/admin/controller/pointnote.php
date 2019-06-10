@@ -13,7 +13,7 @@ if (empty($action) || $action == 'list') {
 
 
     $pagenum    = $conf['pagesize'];
-    $pointnotelist   = db_find('point_note',$where, '', $page, $pagenum);
+    $pointnotelist   = db_find('point_note',$where, array('id'=>-1), $page, $pagenum);
     $totalnum   = db_count('point_note',$where);
     $pagination = pagination(r_url('pointnote-list', array('page' => 'pagenum')), $totalnum, $page, $pagenum);
     include ADMIN_PATH . "view/pointnote_list.html";

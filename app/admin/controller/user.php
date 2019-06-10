@@ -13,7 +13,7 @@ if (empty($action) || $action == 'list') {
 
 
     $pagenum    = $conf['pagesize'];
-    $userlist   = user_find($where, '', $page, $pagenum);
+    $userlist   = user_find($where, array('id'=>-1), $page, $pagenum);
     $totalnum   = user_count($where);
     $pagination = pagination(r_url('user-list', array('page' => 'pagenum')), $totalnum, $page, $pagenum);
     include ADMIN_PATH . "view/user_list.html";
