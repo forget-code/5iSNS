@@ -216,6 +216,35 @@ function single_attach_post($fileid,$dataid,$type){
           }
 
 }
+function unlink_file($fileid){
+    global $conf;
+    $nowfileinfo = file__read($fileid);
+    if($nowfileinfo){
+    	$file = $conf['upload_path'] . $nowfileinfo['mime'].'/' . $nowfileinfo['savepath'];
+    	if(is_file($file)){
+    		unlink($file);
+    	}
+    	db_delete('file',array('id'=>$fileid));
+    	
+    }
+ 	return true;
+}
+function find_content_img($content,$type,$tid){
+	 preg_match_all('/\<img.*?data-id\=\"(.*?)\"[^>]*>/i',htmlspecialchars_decode($content),$matches);//本地图片
+    
+    foreach ($matches[1] as $key => $value) {
+         $img_arr = explode('-',$value);
+          $imginfo = db_find_one('file',array('id'=>$img_arr[0],'sha1'=>$img_arr[1]));
+          if($imginfo['tid']!=0&&$imginfo['tid']!=$tid){
+              
+          }else{
+           db_update('file',array('id'=>$img_arr[0],'sha1'=>$img_arr[1]),array('tid'=>$tid,'type'=>$type));
+          }
+
+    	
+    	
+    }
+}
 function doc_file_upload($fileid,$dataid,$oldfileid=0) {
 global $uid, $time, $conf;
 

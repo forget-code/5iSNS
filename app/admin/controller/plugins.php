@@ -136,5 +136,8 @@ if (empty($action) || $action == 'list') {
 } else if ($action == 'manage') {
 $plugin_name     = param('plugin_name');
 $plugin_action = param('action');
+if(!empty($plugin_action)){
+    $plugin->run($plugin_name,$plugin_action);
+}
 include PLUGIN_PATH . strtolower($plugin_name) . '/' . 'admin.php';
 }

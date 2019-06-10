@@ -50,12 +50,12 @@ if($action == 'login') {
 	}
 } elseif ($action == 'update') {
 
- $s = http_post_curl('http://www.imzaker.com/onlineupdate-up_ver',array('ver'=>$conf['version']));
+ $s = http_post_curl('http://www.5isns.com/onlineupdate-up_ver',array('ver'=>$conf['version'],'domain'=>$_SERVER["SERVER_NAME"]));
       $result = xn_json_decode($s);
 
       if($result['code']==0){
        
-$url = 'http://www.imzaker.com/update/'.$result['verfile'];
+$url = 'http://www.5isns.com/update/'.$result['verfile'];
 $ch = curl_init();
 
 curl_setopt($ch, CURLOPT_URL, $url);

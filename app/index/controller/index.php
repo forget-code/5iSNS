@@ -4,7 +4,12 @@
 $type = param(2,1);
 $page = param('page',1);
 
-$where = array('status' => 1,'img_num'=>array('>'=>0),'type'=>2);
+if($conf['update_views_on']==1) {
+$where = array('status' => 1,'img_num'=>array('>'=>0),'type'=>2);//有图片的首页
+}else{
+$where = array('status' => 1,'type'=>2);//无图片
+}
+
 if($type==1){
 $order = array('settop'=>-1,'id'=>-1);
 }elseif($type==2){

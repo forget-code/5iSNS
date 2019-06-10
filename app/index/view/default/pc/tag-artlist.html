@@ -107,13 +107,16 @@
                         <div class="tags">
                           <?php if(!empty($vo['keywords'])){
 
-foreach($vo['keywords_arr'] as $k=>$v) { ?>
+foreach($vo['keywords_arr'] as $k=>$v) { 
+if($topiccate_info['id']!=$v['id']){
+?>
 
 <a class="tag" href="<?php echo r_url('tags-'.$v['id']); ?>" target="_self">
+  
   <?php echo $v['name']; ?>
 </a>
 
-<?php }} ?>
+<?php }}} ?>
 </div>
                     </h2>
             <p class="uk-article-meta">
@@ -163,13 +166,17 @@ foreach($vo['keywords_arr'] as $k=>$v) { ?>
                         <div class="tags">
                           <?php if(!empty($vo['keywords'])){
 
-foreach($vo['keywords_arr'] as $k=>$v) { ?>
+foreach($vo['keywords_arr'] as $k=>$v) { 
+if($topiccate_info['id']!=$v['id']){
+?>
 
 <a class="tag" href="<?php echo r_url('tags-'.$v['id']); ?>" target="_self">
-  <?php echo $v['name']; ?>
+   <?php if($v['cover_id']>0){ ?>
+       <img src="<?php echo find_image_by_id($v['cover_id']); ?>">
+   <?php } ?><?php echo $v['name']; ?>
 </a>
 
-<?php }} ?>
+<?php }}} ?>
 </div>
                     </h2>
             <p class="uk-article-meta">

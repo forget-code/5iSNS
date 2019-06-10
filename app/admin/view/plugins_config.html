@@ -58,8 +58,8 @@ is_null($form["value"]) && $form["value"] = array();
                 </select>
 <?php  break; ?>
 <?php  case 'textarea': ?>
-              {case value="textarea"}
-<textarea class="autosize layui-textarea" rows="3" cols="3" name="config[<?php echo $o_key; ?>]"><?php echo $form['value']; ?></textarea>
+
+<textarea class="form-control" rows="3" cols="3" name="config[<?php echo $o_key; ?>]"><?php echo $form['value']; ?></textarea>
                 
 <?php  break;default:break;} ?>
 

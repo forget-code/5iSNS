@@ -15,18 +15,33 @@
 				
 					<div class="form-group ">
 						<label class="col-sm-2 form-control-label">清理临时目录：</label>
-						<div class="col-sm-2">
+						<div class="col-sm-1">
 							<?php echo $input['clear_tmp'];?>
 						</div>
 					</div>
 					
 					<div class="form-group ">
 						<label class="col-sm-2 form-control-label">清理缓存：</label>
-						<div class="col-sm-2">
+						<div class="col-sm-1">
 							<?php echo $input['clear_cache'];?>
 						</div>
 					</div>
-								
+						<div class="form-group ">
+						<label class="col-sm-2 form-control-label">清理附件|图片|文档：</label>
+						<div class="col-sm-1">
+							<?php echo $input['clear_file'];?>
+						</div>
+						<p class="col-sm-3 text-danger ">文件较多时清理，清理比较耗时</p>
+					</div>
+						<div class="form-group ">
+						<label class="col-sm-2 form-control-label">清理日志：</label>
+						<div class="col-sm-1">
+							<?php echo $input['clear_log'];?>
+
+						</div>
+<p class="col-sm-3 text-danger ">日志文件包含网站执行日志、错误日志等</p>
+					</div>	
+
 					<div class="form-group ">
 						<label class="col-sm-2 form-control-label">
 <button type="submit" class="btn btn-primary btn-block" id="submit" data-loading-text="确定中...">确定</button>

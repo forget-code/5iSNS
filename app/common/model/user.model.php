@@ -2,7 +2,7 @@
 
 $g_static_users   = array();
 $g_static_users_qx = array();
-
+$user_mess_count = array();
 // ------------> 最原生的 CURD，无关联其他数据。
 
 function user__create($arr)
@@ -100,7 +100,64 @@ function user_read($uid)
     $g_static_users[$uid] = $user;
     return $user;
 }
+function mess_count($uid){
+$hasreadlist=db_find_column('usersandother',array('type'=>4,'uid'=>$uid),'did');
+ 
+$arr2 =  db_find_column('message',array('status'=>1,'touid'=>array($uid,0),'type'=>1,'id'=>array('!='=>$hasreadlist)),'id');
 
+if($arr2){
+$where   = array('id'=>$arr2);
+}else{
+$where   = array('status'=>0,'type'=>1);
+}
+$count1 = db_count('message',$where);
+
+
+$wheren   = array('status' => 1, 'touid' => $uid,'type'=>2); 
+$count2 = db_count('message',$wheren);
+
+return $count1+$count2;
+
+}
+function delete_user_mess($uid,$all=false){
+     global $conf,$user_mess_count;
+
+     if($all){
+        if (isset($user_mess_count[$uid])) {
+            $user_mess_count[$uid] = 0;
+       }
+     }else{
+        if (isset($user_mess_count[$uid])) {
+            $user_mess_count[$uid] = $user_mess_count[$uid]-1;
+        }
+     }
+    if (!in_array($conf['cache']['type'], array('mysql', 'pdo_mysql'))) {
+            cache_set("user_mess_count-$uid", $user_mess_count[$uid]);
+     }
+
+}
+function user_mess_count($uid){
+   global $conf,$user_mess_count;
+    if (isset($user_mess_count[$uid])) {
+        return $user_mess_count[$uid];
+    }
+    if (empty($uid)) {
+        return 0;
+    }
+    if (!in_array($conf['cache']['type'], array('mysql', 'pdo_mysql'))) {
+        $r = cache_get("user_mess_count-$uid");
+        if ($r === null) {
+            $r = mess_count($uid);
+            cache_set("user_mess_count-$uid", $r);
+        }
+    } else {
+        $r = mess_count($uid);
+    }
+    $user_mess_count[$uid] = $r ? $r : 0;
+
+    return $r;
+
+}
 // 从缓存中读取，避免重复从数据库取数据，主要用来前端显示，可能有延迟。重要业务逻辑不要调用此函数，数据可能不准确，因为并没有清理缓存，针对 request 生命周期有效。
 function user_read_cache($uid)
 {
@@ -334,6 +391,7 @@ function user_extend_format($user)
     $user['quanxian_limit_topic']   = 0;
     $user['quanxian_limit_doc']     = 0;
     $user['quanxian_limit_pinglun'] = 0;
+    $user['quanxian_limit_download'] = 0;
     $user['bili']                   = '';
     $user['usergradename']          = '';
     $user['days']                   = 0;
@@ -350,6 +408,7 @@ function user_extend_format($user)
         $user['quanxian_limit_topic']   = $limitarr[0];
         $user['quanxian_limit_doc']     = $limitarr[1];
         $user['quanxian_limit_pinglun'] = $limitarr[2];
+        $user['quanxian_limit_download'] = $limitarr[3];
         $user['usergradename']          = $user['extend']['up_grades_name'];
 
     }
@@ -368,7 +427,9 @@ function user_extend_format($user)
         if ($user['quanxian_limit_pinglun'] > $limitarr[2]) {
             $user['quanxian_limit_pinglun'] = $limitarr[2];
         }
-
+        if ($user['quanxian_limit_download'] > $limitarr[3]) {
+            $user['quanxian_limit_download'] = $limitarr[3];
+        }
         if ($user['extend']['grades_bili'] < $user['bili']) {
             $user['bili'] = $user['extend']['grades_bili'];
             $user['days'] = $user['extend']['grades_days'];
@@ -569,6 +630,16 @@ function user_http_referer()
         || strpos($referer, 'user-create.htm') !== false
         || strpos($referer, 'user-setpw.htm') !== false
         || strpos($referer, 'user-resetpw_complete.htm') !== false
+               || strpos($referer, 'user/login.htm') !== false
+        || strpos($referer, 'user/logout.htm') !== false
+        || strpos($referer, 'user/create.htm') !== false
+        || strpos($referer, 'user/setpw.htm') !== false
+        || strpos($referer, 'user/resetpw_complete.htm') !== false
+               || strpos($referer, 'c=user&a=login.htm') !== false
+        || strpos($referer, 'c=user&a=logout.htm') !== false
+        || strpos($referer, 'c=user&a=create.htm') !== false
+        || strpos($referer, 'c=user&a=setpw.htm') !== false
+        || strpos($referer, 'c=user&a=resetpw_complete.htm') !== false
     ) {
         $referer = './';
     }

@@ -26,7 +26,7 @@ $size = strlen($data);
 $size > $filetypes['filesize'] and message(-1, '文件大小超出限制');
 $ext  = file_ext($name, 7);
 $allowtype = param(3,'attach');
-
+$editid = param(4,0);
 
 $tmpanme = $uid . '_' . xn_rand(15) . '.' . $ext;
 $tmpfile = $conf['upload_path'] . 'tmp/' . $tmpanme;
@@ -57,11 +57,63 @@ if ($mimetype == IMAGETYPE_GIF || $mimetype == IMAGETYPE_JPEG || $mimetype == IM
 
 
 $fileinfo = db_find_one('file', array('sha1'=>$sha1));
+//如果是图片，则继续，文件名加时间
+//如果是附件和文档，
 if($fileinfo){
-    $attach = $fileinfo;
+   
+    if($is_image){
+
+    $count = db_count('file',array('sha1'=>$sha1));
+    $realname = $uid . '_' . $sha1 . $count. '.' . $ext;
+    $day = xn_substr($sha1,5,2);
+            
+            $path = $conf['upload_path'].$allowtype.'/'.$day;
+            $url = $conf['upload_url'].$allowtype.'/'.$day;
+            !is_dir($path) AND mkdir($path, 0777, TRUE);
+            
+            $destfile = $path.'/'.$realname;
+            $desturl = $url.'/'.$realname;
+            
+            $r = xn_copy($tmpfile, $destfile);
+
+            !$r AND xn_log("xn_copy($tmpfile), $destfile) failed, dataid:$dataid, fileid:$fileid", 'php_error');
+           
+
+
+            $attach = array(
+                'uid'=>$uid,
+                'size'=>$size,
+                'width'=>$width,
+                'height'=>$height,
+                'savepath'=>"$day/$realname",
+                'savename'=>$realname,
+                'name'=>$name,
+                'mime'=>$filetype,
+                'ext'=>$ext,
+                'sha1'=>$sha1,
+                'create_time'=>$time,
+                'status'=>1,
+                'type'=>1,
+                'comment'=>'',
+                'downloads'=>0,
+                'isimage'=>$is_image
+            );
+            $id = file_create($attach);
+            $attach['id'] = $id;
+    }else{
+        if(($fileinfo['uid']==$uid&&$fileinfo['tid']==0)||($editid>0&&$fileinfo['tid']==$editid)){
+
+           $attach = $fileinfo;//表示这个可以用
+
+        }else{
+            
+            unlink($tmpfile);
+            message(-1, '该文件已上传');
+        }
+    }
     unlink($tmpfile);
 }else{
-      $realname = $uid . '_' . $sha1 . '.' . $ext;
+            $realname = $uid . '_' . $sha1 . '.' . $ext;
             
             $day = xn_substr($sha1,5,2);
             
@@ -306,7 +358,13 @@ $realname = $uid . '_' . $sha1 . '.' . $ext;
        $path = 'doc';
       
     }
-    
+     if($userqx['quanxian_limit_download']>0){
+         
+    $max_create_time = db_maxid('point_note','create_time',array('uid'=>$uid,'itemid'=>$tid,'type'=>$attach['type'],'inctype'=>'-'));
+    if($time-$max_create_time<$userqx['quanxian_limit_download']){
+      message(-1, '两次下载的限制时间还有'.humanmiao($userqx['quanxian_limit_download']-$time+$max_create_time));
+    }
+  }
 
     $attachpath = $conf['upload_path'] . $path.'/' . $attach['savepath'];
     $attachurl  = $conf['upload_url'] . $path.'/' . $attach['savepath'];

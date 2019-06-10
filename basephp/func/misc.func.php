@@ -46,7 +46,9 @@ if($type=='edit'&&empty($info)){
     foreach ($field_arr as $key => $value) {
 
 if($type=='edit'){
+     
        if($info[$key]==$data[$key]&&$key!=$table_key){
+       
         unset($data[$key]);
         unset($field_arr[$key]);
         continue;
@@ -155,7 +157,7 @@ function xn_log_post_data()
 function my_error_handler($errno,$errstr,$errfile,$errline)
 {
    //如果不是管理员就过滤实际路径
-    
+    global $conf;
         $errfile = str_replace(getcwd(), "", $errfile);
         $errstr = str_replace(getcwd(), "", $errstr);
    
@@ -174,9 +176,10 @@ function my_error_handler($errno,$errstr,$errfile,$errline)
         //不显示Notice级的错误
         break;
     }
- $time              = $_SERVER['time'];
+    $time              = $_SERVER['time'];
     $ajax              = $_SERVER['ajax'];
     IN_CMD and $errstr = str_replace('<br>', "\n", $errstr);
+   
 
     $subject = "Error[$errno]: $errstr, File: $errfile, Line: $errline";
     $message = array();
@@ -194,12 +197,55 @@ function my_error_handler($errno,$errstr,$errfile,$errline)
 
         !isset($v['file']) and $v['file'] = '';
         !isset($v['line']) and $v['line'] = '';
+
         $message[]                        = "File: $v[file], Line: $v[line], $v[function]($args) ";
     }
+    $message = str_replace(getcwd(), "", $message);
+   
     $txt  = $subject . "\r\n" . implode("\r\n", $message);
-    xn_log($txt, 'debug_error');
-include BASEPHP_PATH.'view/error.html';
-exit();
+    $html = $s = "<div class=\"fieldset notice\">
+            <style>
+            body{background:#f0eeef;}
+            .fieldset{position:relative;height:326px;width:700px;background:url('/public/common/images/404bg.png') no-repeat;margin:0 auto;}
+                .text-center{text-align:center;}
+                .showinfo{position:absolute;left:0;top:40%;}
+                .error_p_con{}
+                #showerror{color:#1e8a73;text-decoration:none;}
+                #errordiv{display:none;}
+            </style>
+          
+            <div class='showinfo'>
+            <h1>5iSNS 内容付费系统</h1>
+          
+
+           <p class=\"error_p_con\">官网地址：www.5isns.com</p>
+           <p class=\"error_p_con\">※ 加入官方讨论群726549695或者官方社区寻求答案  <a href='javascript:void(0);' id='showerror'>点击显示错误信息</a></p>
+<p style=\"color:#bbb;\" id='errordiv' >错误提示：".$subject."</p>
+            
+           </div>
+           
+        </div>
+<script>
+var flag=0;
+document.getElementById('showerror').onclick = function() {
+    
+    if(flag==0){
+        document.getElementById('errordiv').style.display='block';
+        flag=1;
+        }else{
+        document.getElementById('errordiv').style.display='none';  
+        flag=0;   
+        }
+    
+}
+
+
+</script>
+        ";
+    echo $html;
+    
+
+    exit();
 }
 // 中断流程很危险！可能会导致数据问题，线上模式不允许中断流程！
 function error_handle($errno, $errstr, $errfile, $errline)
@@ -215,12 +261,15 @@ function error_handle($errno, $errstr, $errfile, $errline)
     $time              = $_SERVER['time'];
     $ajax              = $_SERVER['ajax'];
     IN_CMD and $errstr = str_replace('<br>', "\n", $errstr);
+    $errfile=str_replace(getcwd(),"",$errfile);
+    $errstr=str_replace(getcwd(),"",$errstr);
 
     $subject = "Error[$errno]: $errstr, File: $errfile, Line: $errline";
     $message = array();
     xn_log($subject, 'php_error'); // 所有PHP错误报告都记录日志
 
     $arr = debug_backtrace();
+
     array_shift($arr);
     foreach ($arr as $v) {
         $args = '';
@@ -234,14 +283,25 @@ function error_handle($errno, $errstr, $errfile, $errline)
         !isset($v['line']) and $v['line'] = '';
         $message[]                        = "File: $v[file], Line: $v[line], $v[function]($args) ";
     }
+    $message=str_replace(getcwd(),"",$message);
     $txt  = $subject . "\r\n" . implode("\r\n", $message);
-    $html = $s = "<fieldset class=\"fieldset small notice\">
+    $html = $s = "<div class=\"fieldset notice\">
+            <style>
+                .notice{}
+                .error_p_con{}
+                .bold{font-weight:600;}
+            </style>
             <b>$subject</b>
-            <div>" . implode("<br>\r\n", $message) . "</div>
-        </fieldset>";
+            <div class='showinfo'>" . implode("<br>\r\n", $message) . "</div>
+           <p class=\"error_p_con bold\">※ 5iSNS 内容付费系统 www.5isns.com</p>
+           <p class=\"error_p_con\">※ 加入官方讨论群726549695或者官方社区寻求答案</p>
+        </div>";
     echo ($ajax || IN_CMD) ? $txt : $html;
+      
+
+
     DEBUG == 2 and xn_log($txt, 'debug_error');
-    return true;
+    exit();//return true;
 }
 
 // 使用全局变量记录错误信息
@@ -1620,6 +1680,7 @@ function http_url_path()
  *     c => d
  * )
  */
+
 function xn_url_parse($request_url)
 {
     // 处理: /demo/user-login.htm?a=b&c=d
@@ -1630,47 +1691,84 @@ function xn_url_parse($request_url)
         $request_url = str_replace($nstr, '', $request_url);
     }
     
+
   
     substr($request_url, 0, 1) == '/' and $request_url = substr($request_url, 1);
-     
     
-    $arr = parse_url($request_url);
+    
+    $arr = parse_url($request_url); 
     $front = array_value($arr, 'path');
-
+    
+    $url_rewrite_on=1;
     if (substr($front, -4) == '.htm') {
         $front = substr($front, 0, -4);
-
+        $url_rewrite_on=2;
+    }
+    if(!isset($arr['query'])){
+        $url_rewrite_on=2;
     }
 
         if(stripos($front,'/')!==FALSE){
+           
             $module = substr($front, 0,stripos($front,'/'));
-            $front = substr($front, stripos($front, '/') + 1);
             if(!in_array($module,$conf['module_arr'])){
                 $arr1 = 'index';
+
             }else{
                 $arr1 = $module;
+                $front = substr($front, stripos($front, '/') + 1);
             }
+     
         }else{
             $arr1 = 'index';
         }
 
-    $front = str_replace('/', '-', $front);
-    $r = $front ? (array) explode('-', $front) : array();
-
-    array_unshift($r, $arr1);
-    
     $arr2 = array();
-    
-
-    // 将 xxx.htm?a=b&c=d 放到后面，并且修正 $_GET
     if (!empty($arr['query'])) {
         parse_str($arr['query'], $arr2);
     } else {
         !empty($_GET) and $_GET = array();
     }
+ 
+ if($url_rewrite_on==1){
+    //没开伪静态、
+    
+    $r = array();
+    if(isset($arr2['c'])){
+        $r[0]=$arr2['c'];
+        unset($arr2['c']);
+    }
+    if(isset($arr2['a'])){
+        $r[1]=$arr2['a'];
+        unset($arr2['a']);
+    }      
+    if(isset($arr2['e'])){
+        $e_arr = explode('-',$arr2['e']);
+        foreach ($e_arr as $key => $value) {
+            array_push($r,$value);
+        }
+        
+        
+       
+        unset($arr2['e']);
+    }  
+         
+ }else{
+   
+    $front = str_replace('/', '-', $front);
+    $r = $front ? (array) explode('-', $front) : array(); 
+
+ }
+
+array_unshift($r, $arr1);//将模块放到第一位
+    
+    
+    
+
+  
+
     
     if ($arr2) {
-       
         count($arr2) != count($_GET) and $_GET = $arr2;
     } else {
         !empty($_GET) and $_GET = array();
@@ -1996,6 +2094,8 @@ function http_403()
 
 function http_location($url)
 {
+    header("Access-Control-Allow-Origin:*");
+header('Access-Control-Allow-Headers: X-Requested-With,X_Requested_With');
     header('Location:' . $url);
     exit;
 }

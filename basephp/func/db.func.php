@@ -9,7 +9,11 @@ function db_new($dbconf) {
 	
 		// 代码不仅仅是给人看的，更重要的是给编译器分析的，不要玩 $db = new $dbclass()，那样不利于优化和 opcache 。
 		switch ($dbconf['type']) {			
-			case 'pdo_mysql':  $db = new db_pdo_mysql($dbconf['pdo_mysql']);	break;	
+			
+			case 'mysql':      $db = new db_mysql($dbconf['mysql']); 		break;
+			case 'pdo_mysql':  $db = new db_pdo_mysql($dbconf['pdo_mysql']);	break;
+			case 'pdo_sqlite': $db = new db_pdo_sqlite($dbconf['pdo_sqlite']);	break;
+			case 'pdo_mongodb': $db = new db_pdo_mongodb($dbconf['pdo_mongodb']);	break;
 			default: return xn_error(-1, 'Not suppported db type:'.$dbconf['type']);
 		}
 		if(!$db || ($db && $db->errstr)) {
@@ -322,6 +326,11 @@ function db_cond_to_sqladd($cond) {
 
 				foreach($v as $k1=>$v1) {
 					
+                    if(!in_array($k1, array('=','LIKE','!=','>','<','<=','>=','<>'))){
+                    	continue;
+                    }
+
+
 					if($k1 == 'LIKE') {
 						$k1 = ' LIKE ';
                         $v1="%$v1%";	

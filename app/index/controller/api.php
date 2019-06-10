@@ -1,10 +1,7 @@
 <?php
 
 !defined('DEBUG') and exit('Access Denied.');
-require EXTEND_PATH . 'pay/Alipay/SDK.php';
-require EXTEND_PATH . 'pay/Alipay/Params/Pay/Request.php';
-require EXTEND_PATH . 'pay/Alipay/Params/PublicParams.php';
-use Yurun\PaySDK\Alipay\SDK;
+
 
 ($uid <= 0) and message(-1, '请先登录');
 //还需要验证token之类的
@@ -14,6 +11,7 @@ if ($action == 'focus') {
 
     $type   = param(3, 0);
     $val    = param('val');
+    
     $insert = array(
         'type' => $type,
         'uid'  => $uid,
@@ -41,6 +39,19 @@ if ($action == 'focus') {
 
         user_extend_update($topicinfo['uid'], array('focus_mytopic_num' . $myoprate => 1));
         user_extend_update($uid, array('focus_topic_num' . $myoprate => 1));
+
+    }elseif ($type == 4) {
+        $suc_message = '点赞成功';
+        $err_message = '点赞失败';
+        $commentinfo   = comment__read($val);
+        $clearcontent = clearHtml(htmlspecialchars_decode($commentinfo['content']));
+        $name        = $clearcontent;
+        if (!$commentinfo) {
+            message(-1, '该评论不存在');
+        }
+        $icon['qx']    = 'thumbs-o-up';
+        $icon['focus'] = 'thumbs-up';
+        $typename      = '评论';
 
     } elseif ($type == 2) {
         $icon['qx']     = 'plus';
@@ -94,10 +105,17 @@ if ($action == 'focus') {
     }
 
     if ($r) {
-        $result         = db_delete('usersandother', array('id' => $r['id']));
+if($type==4){
+message(-1, '您已经赞过这个评论');
+}else{
+    $result         = db_delete('usersandother', array('id' => $r['id']));
         $delete_message = '取消';
         $extra['icon']  = $icon['qx'];
+ 
+}
+         
 
+       
     } else {
         $insert['name']        = $name;
         $insert['create_time'] = $time;
@@ -115,7 +133,10 @@ send_message($val,$subject,$mail_subject,'someone_focusme');
 
 
         }
+        if ($type == 4) {
 
+            comment__update($val, array('ding+'=>1));
+        }
     }
 
     if ($result) {
@@ -174,220 +195,7 @@ send_message($val,$subject,$mail_subject,'someone_focusme');
     } else {
         message(-1, '私信失败，请稍后再试');
     }
-} elseif ($action == 'dashang') {
-
-    $pay_method = param('pay_method');
-    $score      = intval(param('score'));
-    $content    = param('content');
-
-    $id   = param('id');
-    $info = topic_read($id);
-    empty($info) and message(-1, '帖子不存在');
-
-    if (empty($pay_method)) {
-        message(-1, '请选择支付方式');
-    }
-    if ($score < 1) {
-        message(-1, '怎么的也要打赏点吧');
-    }
-
-    if ($pay_method == 'alipay') {
-        $out_trade_no = xn_safe_key();
-        $insert       = array(
-            'rmb'          => $score,
-            'type'         => 1,
-            'actiontype'   => 2,
-            'itemid'       => $id,
-            'out_trade_no' => $out_trade_no,
-            'score'        => $conf['chongzhi']['bili'] * $score,
-            'uid'          => $info['uid'],
-            'create_time'  => $time,
-            'errorcode'    => $content,
-
-        );
-        $result = db_create('chongzhi', $insert);
-        if ($result) {
-
-            $params         = new \Yurun\PaySDK\Alipay\Params\PublicParams;
-            $params->appID  = $conf['alipay']['appID'];
-            $params->md5Key = $conf['alipay']['md5Key'];
-            $pay            = new SDK($params);
-
-// 支付接口
-            $request                               = new \Yurun\PaySDK\Alipay\Params\Pay\Request;
-            $request->notify_url                   = $conf['web_url'] . '/api-pay_notify_url'; // 支付后通知地址（作为支付成功回调，这个可靠）
-            $request->return_url                   = $conf['web_url'] . '/api-pay_return_url'; // 支付后跳转返回地址
-            $request->businessParams->seller_id    = $conf['alipay']['appID']; // 卖家支付宝用户号
-            $request->businessParams->out_trade_no = $out_trade_no; // 商户订单号
-            $request->businessParams->total_fee    = $score; // 价格
-            $request->businessParams->subject      = '帖子打赏'; // 商品标题
-
-// 跳转到支付宝页面
-            $url = $pay->redirectExecute($request, true);
-            message(0, '打赏成功', array('url' => $url));
-        }
-    }
-
-    if ($pay_method == 'caifu') {
-
-        if ($user['extend']['point'] < $conf['chongzhi']['bili'] * $score) {
-            message(-1, '余额不足');
-        }
-
-        $pointdata['uid']         = $uid;
-        $pointdata['to_uid']      = $info['uid'];
-        $pointdata['description'] = '打赏';
-        $pointdata['itemid']      = $id;
-
-        point_note_op(6, $conf['chongzhi']['bili'] * $score, 'point', '-', $pointdata);
-        if (!empty($content)) {
-            send_sys_message($info['uid'], '用户' . $user['nickname'] . '在帖子《' . $info['title'] . '》打赏了你，并给你留言：</br>' . $content);
-        } else {
-            send_sys_message($info['uid'], '用户' . $user['nickname'] . '在帖子《' . $info['title'] . '》打赏了你');
-        }
-        message(0, '打赏成功');
-    }
-
-} elseif ($action == 'pay_return_url') {
-    $out_trade_no = param('out_trade_no');
-    //支付宝交易号
-
-    $trade_no = param('trade_no');
-
-    //交易状态
-    $trade_status        = param('trade_status');
-    $map['out_trade_no'] = $out_trade_no;
-    $info                = db_find_one('chongzhi', $map);
-    if ($info['type'] == 1) {
-
-        $params         = new \Yurun\PaySDK\Alipay\Params\PublicParams;
-        $params->appID  = $conf['alipay']['appID'];
-        $params->md5Key = $conf['alipay']['md5Key'];
-        $pay            = new SDK($params);
-        $verify_result  = $pay->verifyCallback($_GET);
-
-        if ($verify_result) {
-//验证成功
-
-            if ($info['status'] != 1) {
-
-                $data['status']      = 1;
-                $data['trade_no']    = $trade_no;
-                $data['update_time'] = $time;
-                db_update('chongzhi', $map, $data);
-
-                if ($info['actiontype'] == 2) {
-                    $info                     = topic_read($info['itemid']);
-                    $pointdata['uid']         = $info['uid'];
-                    $pointdata['to_uid']      = $uid;
-                    $pointdata['description'] = '打赏';
-                    $pointdata['itemid']      = $info['id'];
-
-                    point_note_op(6, $info['score'], 'point', '+', $pointdata);
-
-                    if (!empty($info['errorcode'])) {
-                        send_sys_message($info['uid'], '用户' . $user['nickname'] . '在帖子《' . $info['title'] . '》打赏了你，并给你留言：</br>' . $info['errorcode']);
-                    } else {
-                        send_sys_message($info['uid'], '用户' . $user['nickname'] . '在帖子《' . $info['title'] . '》打赏了你');
-                    }
-
-                } else {
-                    $pointdata['description'] = '充值';
-                    $pointdata['uid']         = $uid;
-                    $pointdata['to_uid']      = 0;
-
-                    point_note_op(4, $info['score'], 'point', '+', $pointdata);
-                }
-            }
-
-            echo "success";
-            if ($info['actiontype'] == 1) {
-                http_location(r_url('user-' . $uid));
-            }
-            if ($info['actiontype'] == 2) {
-                http_location(r_url('thread-' . $info['itemid']));
-            }
-            /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        } else {
-            //验证失败
-
-            $data['trade_no']    = $trade_no;
-            $data['errorcode']   = param('trade_status');
-            $data['update_time'] = $time;
-            db_update('chongzhi', $map, $data);
-
-            echo "fail";
-
-        }
-    }
-} elseif ($action == 'pay_notify_url') {
-
-    $out_trade_no = param('out_trade_no');
-    //支付宝交易号
-
-    $trade_no = param('trade_no');
-
-    //交易状态
-    $trade_status        = param('trade_status');
-    $map['out_trade_no'] = $out_trade_no;
-    $info                = db_find_one('chongzhi', $map);
-    if ($info['type'] == 1) {
-
-        $params         = new \Yurun\PaySDK\Alipay\Params\PublicParams;
-        $params->appID  = $conf['alipay']['appID'];
-        $params->md5Key = $conf['alipay']['md5Key'];
-        $pay            = new SDK($params);
-        $verify_result  = $pay->verifyCallback($_GET);
-
-        if ($verify_result) {
-//验证成功
-
-            if ($info['status'] != 1) {
-
-                $data['status']      = 1;
-                $data['trade_no']    = $trade_no;
-                $data['update_time'] = $time;
-                db_update('chongzhi', $map, $data);
-
-                if ($info['actiontype'] == 2) {
-                    $info                     = topic_read($info['itemid']);
-                    $pointdata['uid']         = $info['uid'];
-                    $pointdata['to_uid']      = $uid;
-                    $pointdata['description'] = '打赏';
-                    $pointdata['itemid']      = $info['id'];
-
-                    point_note_op(6, $info['score'], 'point', '+', $pointdata);
-                } else {
-                    $pointdata['description'] = '充值';
-                    $pointdata['uid']         = $uid;
-                    $pointdata['to_uid']      = 0;
-
-                    point_note_op(4, $info['score'], 'point', '+', $pointdata);
-                }
-
-            }
-
-            echo "success";
-            if ($info['actiontype'] == 1) {
-                http_location(r_url('user-' . $uid));
-            }
-            if ($info['actiontype'] == 2) {
-                http_location(r_url('thread-' . $info['itemid']));
-            }
-            /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        } else {
-            //验证失败
-
-            $data['trade_no']    = $trade_no;
-            $data['errorcode']   = param('trade_status');
-            $data['update_time'] = $time;
-            db_update('chongzhi', $map, $data);
-
-            echo "fail";
-
-        }
-    }
-} elseif ($action == 'tixian') {
+}elseif ($action == 'tixian') {
 
    $score = intval(param('score', 0));
    $rmb = floor((100-$conf['tixian']['bili'])*$score/(100*$conf['chongzhi']['bili']));
@@ -424,54 +232,6 @@ if ($result) {
 
 }
 
-} elseif ($action == 'chongzhi') {
-    $type = param('type', 1);
-
-    $chongzhi = param('chongzhi', 1);
-    if (intval($chongzhi) < 1) {
-        message(-1, '最少充值1元');
-    }
-    $chongzhi     = intval($chongzhi);
-    $out_trade_no = xn_safe_key();
-    $insert       = array(
-        'rmb'          => $chongzhi,
-        'type'         => $type,
-        'actiontype'   => 1,
-        'itemid'       => 0,
-        'out_trade_no' => $out_trade_no,
-        'score'        => $conf['chongzhi']['bili'] * $chongzhi,
-        'uid'          => $uid,
-        'create_time'  => $time,
-    );
-    $result = db_create('chongzhi', $insert);
-
-    if ($result) {
-
-        if ($type == 1) {
-//表示支付宝
-            $params         = new \Yurun\PaySDK\Alipay\Params\PublicParams;
-            $params->appID  = $conf['alipay']['appID'];
-            $params->md5Key = $conf['alipay']['md5Key'];
-            $pay            = new SDK($params);
-
-// 支付接口
-            $request                               = new \Yurun\PaySDK\Alipay\Params\Pay\Request;
-            $request->notify_url                   = $conf['web_url'] . '/api-pay_notify_url'; // 支付后通知地址（作为支付成功回调，这个可靠）
-            $request->return_url                   = $conf['web_url'] . '/api-pay_return_url'; // 支付后跳转返回地址
-            $request->businessParams->seller_id    = $conf['alipay']['appID']; // 卖家支付宝用户号
-            $request->businessParams->out_trade_no = $out_trade_no; // 商户订单号
-            $request->businessParams->total_fee    = $chongzhi; // 价格
-            $request->businessParams->subject      = '积分充值'; // 商品标题
-
-// 跳转到支付宝页面
-            $url = $pay->redirectExecute($request, true);
-        }
-
-        message(0, '充值成功', array('url' => $url));
-    } else {
-        message(-1, '充值失败，请稍后再试');
-    }
-
 } elseif ($action == 'delmess') {
 
     $r  = db_update('message', array('touid' => $uid, 'type' => 2), array('status' => 2));
@@ -482,7 +242,7 @@ if ($result) {
     foreach ($list as $key => $vo) {
         db_create('usersandother', array('uid' => $uid, 'type' => 4, 'did' => $vo['id'], 'create_time' => $time, 'status' => 1, 'name' => $vo['content']));
     }
-
+    delete_user_mess($uid,true);
     message(0, '消息已全部清空', array('url' => r_url('user-notification')));
 } elseif ($action == 'readmess') {
     $id       = param('id');
@@ -503,7 +263,7 @@ if ($result) {
         //私信更新两人所有对话为已读
         $r = db_update('message', array('uid' => $mess_uid, 'touid' => $uid, 'type' => 2), array('status' => 2));
     }
-
+     delete_user_mess($uid);
     message(0, '消息已标记已读');
 
 }

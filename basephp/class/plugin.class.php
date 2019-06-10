@@ -24,14 +24,16 @@ $classname = $v['name'];
 
 if(class_exists($classname))
 {
-
+  
   $this->_listener[$classname] = new $classname();
+  
 }
 
 }
 }
 }
 }
+
 public function installAddon($info){
 
 

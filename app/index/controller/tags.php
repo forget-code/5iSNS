@@ -8,6 +8,7 @@ if($action == 'list'||empty($action)) {
 $hot_tags = topiccate_find(array('status' => 1), array('num'=>-1), 1, 6);
 $type = param(3,1);
 $id = param(2,0);
+
 $topiccate_info = topiccate_read($id);
 empty($topiccate_info) AND message(-1, '话题不存在');
 $page = param('page',1);

@@ -9,11 +9,12 @@
          
     <div class="wrap">
         <form class="form-horizontal" data-url="<?php echo r_url('doc-edit'); ?>" id="doc_edit_form" method="post">
-
+          <input type="hidden" name="docid" id="file_docid" value="<?php echo $info['fileid']; ?>">
+<?php if($info['pageid']==0){ ?>
           <div class="form-group">
                 <label class="col-sm-1 form-control-label">
                     选择文档
-                    <input type="hidden" name="docid" id="file_docid" value="<?php echo $info['fileid']; ?>">
+                    
                 </label>
                 <div class="col-sm-8">
                     <div class="panel panel-default">
@@ -24,7 +25,7 @@
   </div>
   <div class="panel-footer clearfix" style="background: #fff">
     <div class="col-xs-2">
-     <div class="fcup"></div>
+     <div id="uploadfile"></div>
    </div>
    <div class="col-xs-8">
      <div class="progress">
@@ -38,7 +39,7 @@
                     <p class="wi-margin-top text-warning small">请谨慎选择上传文档，尤其涉及版权纠纷、他人权益的，禁止上传。可上传类型为<?php echo implode(',',$filetypes['attach']); ?>。文件大小不大于<?php echo humansize($filetypes['filesize']); ?></p>
                 </div>
             </div>
-
+<?php } ?>
             <div class="form-group">
                 <label class="col-sm-1 control-label">
                     标题
@@ -132,7 +133,7 @@
 
 
               wi.upload_file(
-    xn.url('attach-create-doc',1),
+    xn.url('attach-create-doc-<?php echo $info['id']; ?>',1),
     {inputid:'inputid',fileid:'fileid',divid:'uploadfile'},
     '',
     function(code, ret) {

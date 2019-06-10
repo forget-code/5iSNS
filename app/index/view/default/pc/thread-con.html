@@ -38,7 +38,7 @@
 								</span>
 							<span class="pull-right">
 								
-							<?php $plugin->run('share','share',$thread); ?>
+							<?php $plugin->run('oneshare','share',$thread); ?>
   
 							
 							</span>
@@ -140,7 +140,7 @@ foreach($thread['keywords_arr'] as $k=>$v) { ?>
 							<div class="three-link">
 
 								<span class="report"  id="report-modal">
-<a class="openformdialog" data-url="<?php echo r_url('user-jubao',array('id'=>$thread['id'],'type'=>1)); ?>" data-formid="report-form" data-id="reporttpl"  data-width="490" data-height="420" data-title="帖子举报" href="javascript:;"  target="_self"><i class="fa fa-warning"></i>举报 </a></span>
+<a class="openformdialog" data-url="<?php echo r_url('user-jubao',array('id'=>$thread['id'],'type'=>1)); ?>" data-formid="report-form" data-id="reporttpl"  data-width="auto" data-height="70%" data-title="帖子举报" href="javascript:;"  target="_self"><i class="fa fa-warning"></i>举报 </a></span>
 <?php if(hasfocus($thread['id'],1)){ ?>
 	<a href="javascript:void(0);" data-url="<?php echo r_url('api-focus-1'); ?>" data-val="<?php echo $thread['id']; ?>" title="已收藏" data-classname="btn-default" data-removeclassname="btn-success" data-title="收藏" class="focus-action btn btn-default" target="_self"><i class="fa fa-star"></i> 已收藏</a>
 <?php }else{ ?>
@@ -238,7 +238,7 @@ if(has_buy($uid,$thread['id'],$vo['type'])||$uid==$thread['uid']){
 <?php } ?>
 									<div class="support-author">
 										
-										<div data-url="<?php echo r_url('api-dashang',array('id'=>$thread['id'],'type'=>1)); ?>" data-formid="thanks-form" data-id="thankstpl"  data-width="580" data-height="450" data-title="赞赏支持" href="javascript:;" class="openformdialog btn btn-danger" data-toggle="tooltip" data-placement="top" title=""
+										<div data-url="<?php echo r_url('zhifu-dashang',array('id'=>$thread['id'],'type'=>1)); ?>" data-formid="thanks-form" data-id="thankstpl" data-async="false" data-width="auto" data-height="50%" data-title="赞赏支持" href="javascript:;" class="openformdialog btn btn-danger" data-toggle="tooltip" data-placement="top" title=""
 										 data-original-title="一共获得了<?php echo $sumscore.$conf['pointname']['point']; ?>" onclick="">赞赏支持</div>
 										 <div class="supporter"><ul class="support-list">
 										 	
@@ -276,7 +276,7 @@ if(has_buy($uid,$thread['id'],$vo['type'])||$uid==$thread['uid']){
 <input type="hidden" value="<?php echo $token; ?>"	name="token" />
 											<input type="hidden" value="<?php echo $thread['id']; ?>"	name="topic_id" />
 											<input type="hidden" value="0" id="comment_pid"	name="pid" />
-												<textarea name="content" placeholder="写下你的评论..." class="comment-area"></textarea>
+												<textarea name="content" id="summernote" placeholder="写下你的评论..." class="comment-area"></textarea>
 												<div class="write-function-block">
 													<button type="submit" class="btn col-md-3 btn-primary pull-right wi-margin-top" name="comments" id="comments"
 													 target="_self">发表评论</button> </div>
@@ -331,10 +331,17 @@ foreach($comment_list as $key=>$vo){
 </div>
 </header>
 														<div class="wi-margin-top comment-body">
-															<p><?php echo $vo['content']; ?></p>
+															<p><?php echo htmlspecialchars_decode($vo['content']); ?></p>
 														</div>
 														<div class="tool-group">
-															<a class="button_agree" dataid="<?php echo $vo['id']; ?>" target="_self"><i class="fa fa-thumbs-o-up"></i> <span><?php echo $vo['ding']; ?>人赞</span></a>
+
+<?php if(hasfocus($vo['id'],4)){ ?>
+	<a href="javascript:void(0);" class="button_agree" target="_self"><i class="fa fa-thumbs-up"></i> <?php echo $vo['ding']; ?>人赞</a>
+<?php }else{ ?>
+	<a href="javascript:void(0);" data-url="<?php echo r_url('api-focus-4'); ?>" data-val="<?php echo $vo['id']; ?>" title="赞"  data-title="<?php echo $vo['ding']+1; ?>人赞" class="focus-action button_agree" target="_self"><i class="fa fa-thumbs-o-up"></i> <?php echo $vo['ding']; ?>人赞</a>
+<?php } ?>
+
+
 												
 															<a class="getcommentlist" dataid="<?php echo $vo['id']; ?>" target="_self"><i class="fa fa-reply"></i>
 																<span>回复<?php echo $vo['reply']; ?></span></a>
@@ -528,99 +535,8 @@ foreach($vo['child'] as $k=>$v){
         </div>
     </div>
 </script>
-<script type="text/html" id="paynowtpl">
-    <div class="" style="padding:20px 20px 20px 20px;min-width:330px;min-height:220px;">
-        <div>
-            <div class="alert alert-info">
-                <div class="row">
-                    <div class="col-xs-12">
-                        <div style="font-size:14px;"><b>支付金额：￥<%=price%></b></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <form action="https://ask.fastadmin.net/order/submit.html" id="paynow-form" method="post" target="_blank">
-            <input type="hidden" name="id" value="<%=id%>"/>
-            <input type="hidden" name="type" value="<%=type%>"/>
-            <hr>
-            <div class="row my-4 text-center">
-                <div class="col-xs-4">
-                    <div class="form-check">
-                        <input class="form-check-input" type="radio" name="paytype" id="paytype-wechat"
-                               value="wechat" checked>
-                        <label class="form-check-label" for="paytype-wechat">
-                            <img src="https://cdn.fastadmin.net/assets/addons/ask/img/wechat.png" height="30" alt="">
-                        </label>
-                    </div>
-                </div>
-                <div class="col-xs-4">
-                    <div class="form-check">
-                        <input class="form-check-input" type="radio" name="paytype" id="paytype-alipay"
-                               value="alipay">
-                        <label class="form-check-label" for="paytype-alipay">
-                            <img src="https://cdn.fastadmin.net/assets/addons/ask/img/alipay.png" height="30" alt="">
-                        </label>
-                    </div>
-                </div>
-                <div class="col-xs-4">
-                    <div class="form-check">
-                        <input class="form-check-input" type="radio" name="paytype" id="paytype-balance"                         value="balance">
-                        <label class="form-check-label" for="paytype-balance" data-toggle="tooltip" data-title="余额：￥0.00">
-                            <img src="https://cdn.fastadmin.net/assets/addons/ask/img/balance.png" height="30" alt="">
-                        </label>
-                    </div>
-                </div>
-            </div>
-            <hr>
-            <div class="row mt-2">
-                <div class="col text-center">
-                    <button type="submit" class="btn btn-primary btn-submit-pay">立即支付</button>
-                </div>
-            </div>
-        </form>
-    </div>
-</script>
-<script id="sharetpl" type="text/html">
-    <div id="sharenow" style="padding:20px;">
-        <div class="row text-center">
-            <div class="col-xs-12">
-                <img src="https://www.fastadmin.net/qrcode/build?text=<%=url%>&logo=1&logosize=50&padding=0" width="120" alt="">
-                <div class="my-2">
-                    扫码分享到微信
-                </div>
-            </div>
-        </div>
-        <div class="row text-center mt-3 pt-2">
-            <div class="col-xs-4">
-                <a href="http://service.weibo.com/share/share.php?url=<%=url%>&title=<%=title%>" target="_blank">
-                <span class="fa-stack fa-lg text-danger">
-                  <i class="fa fa-circle fa-stack-2x"></i>
-                  <i class="fa fa-weibo fa-stack-1x fa-inverse"></i>
-                </span><br>
-                    分享到微博
-                </a>
-            </div>
-            <div class="col-xs-4">
-                <a href="javascript:" class="btn-share-wechat">
-                <span class="fa-stack fa-lg text-success">
-                  <i class="fa fa-circle fa-stack-2x"></i>
-                  <i class="fa fa-wechat fa-stack-1x fa-inverse"></i>
-                </span><br>
-                    分享到微信
-                </a>
-            </div>
-            <div class="col-xs-4">
-                <a href="https://connect.qq.com/widget/shareqq/index.html?url=<%=url%>&title=<%=title%>&desc=&summary=&site=FastAdmin" target="_blank">
-                <span class="fa-stack fa-lg text-info">
-                  <i class="fa fa-circle fa-stack-2x"></i>
-                  <i class="fa fa-qq fa-stack-1x fa-inverse"></i>
-                </span><br>
-                    分享到QQ
-                </a>
-            </div>
-        </div>
-    </div>
-</script>
+
+
 <script id="thankstpl" type="text/html">
     <div class="wi-padding">
         <div class="alert alert-warning" role="alert">
@@ -636,7 +552,9 @@ foreach($vo['child'] as $k=>$v){
 							</a>
             	
             	<span class="intro">给作者打赏</span>
-            	 </div> <div class="main-inputs"><div class="amount-group">
+            	 </div> 
+            	 <div class="main-inputs">
+            	 	<div class="amount-group">
             	 	<input id="option1" type="radio" name="score" value="2"> 
             	 	<label for="option1" class="option">
             	 	 <span class="amount">￥2</span> </label> 
@@ -646,6 +564,8 @@ foreach($vo['child'] as $k=>$v){
             	 	 <input id="option3" type="radio" name="score" value="10"> 
             	 	 <label for="option3" class="option">
             	 	 <span class="amount">￥10</span> </label> 
+            	 	 </div> 
+            	 	 <div class="amount-group">
             	 	 <input id="option4" type="radio" name="score" value="20"> 
             	 	 <label for="option4" class="option">
             	 	 <span class="amount">￥20</span> </label> 
@@ -655,11 +575,13 @@ foreach($vo['child'] as $k=>$v){
             	 	 <input id="custom-option" type="radio" name="score" class="custom-amount" value="0"> 
             	 	 <label for="custom-option" class="option">
             	 	 <span class="custom-text">自定义</span> <div class="custom-amount-input">
-            	 	 <input type="number" oninput="value = parseInt(Math.min(Math.max(value, 0), 10000), 10)"></div></label></div> 
+            	 	 <input type="number" oninput="value = parseInt(Math.min(Math.max(value, 0), 10000), 10)"></div></label>
+
+            	 	</div> 
             	 	 <div class="message"><textarea placeholder="给Ta留言…" name="content"></textarea></div></div> 
             	<div class="reward-info text-center"><span class="amount" id="totalnum">￥0</span> </div> 
             	<div class="choose-pay">
-            		<!-- <input id="method1" type="radio" name="pay_method" value="wx_pub_qr"> 
+            		<!-- <input id="method1" type="radio" name="pay_method" value="weixin"> 
             		<label for="method1" class="option">
             			<img src="./public/common/images/wechat.png" class="day wechat">
             		</label> -->
@@ -706,6 +628,9 @@ foreach($vo['child'] as $k=>$v){
                 </div>
 </script>
 	<?php include $conf['view_path'].'footer.inc.html';?>
+	 <link href="<?php echo $conf['public_dir']; ?>/summernote/summernote.css" rel="stylesheet" />
+	 <script src="<?php echo $conf['public_dir']; ?>/summernote/summernote.js">
+    </script>
 	<script>
 $(function(){
 $(document).on("click",".confirm-download",function(){
@@ -752,12 +677,63 @@ $('#totalnum').html('￥'+val);
 
 
 });
-    
+     var $summernote = $('#summernote').summernote(
+    {
+  height: 100,                 // set editor height
+  focus: false,
+  dialogsInBody: true,
+  toolbar : [
+
+                [ 'style', [ 'style'] ],
+                [
+                    'style',
+                    [ 'bold', 'italic', 'underline','fontsize'] ],
+               
+                
+                [ 'color', [ 'color' ] ],
+                [
+                    'insert',
+                   [ 'link', 'hr' ] ],// 自定义按钮展示
+                
+                [ 'codetag', [ 'codetag','pre','blockquote'] ],
+               ['picture',['picture']], //插入图片 
+               
+               ['myphoto'],    ['clear'],            
+               
+               
+        ],
+         //调用图片上传
+            callbacks: {
+                onImageUpload: function (files) {
+                  xn.upload_file(files[0], xn.url('attach-create-image',1), '',function(code,ret){
+                    console.log(code,ret);
+if(code==0){
+   var imgNode = document.createElement("img");
+    $(imgNode).addClass("topic_img").attr('data-id',ret.id+'-'+ret.sha1);  
+
+   imgNode.src = ret.file_url;
+   $summernote.summernote('insertNode',imgNode);
+}else{
+   $.sns5i_notify(ret.message,'danger');
+}
+                        
+
+                  });
+                  
+                },
+
+//onBlur:function(){console.log('Editable area loses focus');},
+//onPaste:function(e){console.log('Called event paste');},
+//onKeyup:function(e){console.log('Key is released:',e.keyCode);},
+//onEnter:function(){console.log('Enter/Return key pressed');}
+            }
+                 // set focus to editable area after initializing summe
+    });
   var jform = $('.create_comment_topic');
 
 
   jform.on('submit', function() {
-  	var jsubmit = $(this).find('button');
+  	var jsubmit = $(this).find('#comments');
     var postdata = $(this).serialize();
    
     jsubmit.button('sending').button('disabled');

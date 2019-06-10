@@ -6,7 +6,7 @@
 						<?php if($uid==$_user['id']){ ?>
 						<a class="btn btn-primary pull-right" href="<?php echo r_url('user-setting'); ?>" target="_self">
 							<i class="fa fa-gear"></i> <span>个人设置</span></a>
-							<a data-url="<?php echo r_url('api-chongzhi',array('type'=>1,'uid'=>$_user['id'])); ?>" data-formid="chongzhi-form" data-id="chongzhitpl"  data-width="auto" data-height="auto" data-title="充值" href="javascript:;" class="openformdialog btn btn-info pull-right wi-margin-right"><?php echo $conf['pointname']['point']; ?>充值</a>
+							<a data-url="<?php echo r_url('zhifu-chongzhi',array('type'=>1,'uid'=>$_user['id'])); ?>" data-formid="chongzhi-form" data-async="false"  data-id="chongzhitpl"  data-width="auto" data-height="auto" data-title="充值" href="javascript:;" class="openformdialog btn btn-info pull-right wi-margin-right"><?php echo $conf['pointname']['point']; ?>充值</a>
                          <?php }else{ ?>
 <div class="pull-right">
 							
@@ -100,13 +100,28 @@ echo $_user['statusdes'];
         <div class="alert alert-warning" role="alert">
             最小充值一元，可以折合<?php echo $conf['chongzhi']['bili'].$conf['pointname']['point']; ?>
         </div>
-<form  id="chongzhi-form" class="layerform" method="post">
+<form  id="chongzhi-form" class="layerform reward-note-modal" method="post">
 
                 <div class="clearfix radio">
- <div class="wi-margin-top text-center clearfix">
-                    <div class="col-xs-12">
+ <div class="wi-margin-top clearfix">
+                    <div class="">
 <input class="form-control" value="1"  name="chongzhi" id="chongzhi" />
 </div>
+
+ <div class="col-xs-12 choose-pay">
+ 		<!-- <input id="method1" type="radio" name="pay_method" value="weixin"> 
+ 		            		<label for="method1" class="option">
+ 		            			<img src="./public/common/images/wechat.png" class="day wechat">
+ 		        </label> -->
+            		<input id="method2" type="radio" name="pay_method" value="alipay"> 
+            		<label for="method2" class="option">
+            			<img src="./public/common/images/alipay.png" class="day alipay"> 
+            		</label> 
+
+
+</div>
+
+
 </div>
 </div>
 

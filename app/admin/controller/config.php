@@ -33,6 +33,9 @@ if(empty($conf['online_trans_num'])){
         
 
         $input['shuiyin'] = form_text('shuiyin', $conf['shuiyin']);
+        $input['url_rewrite_on'] = form_radio('url_rewrite_on', array('0'=>'关闭','1'=>'打开'),$conf['url_rewrite_on']);
+ $input['update_views_on'] = form_radio('update_views_on', array('0'=>'无图首页','1'=>'有图首页'),$conf['update_views_on']);
+
         $input['sy_type'] = form_radio('sy_type', array('0'=>'关闭','1'=>'文字','2'=>'图片'),$conf['sy_type']);
         $input['user_create_on'] = form_radio_yes_no('user_create_on', $conf['user_create_on']);
         $input['user_create_email_on'] = form_radio_yes_no('user_create_email_on', $conf['user_create_email_on']);
@@ -53,8 +56,11 @@ if(empty($conf['online_trans_num'])){
         $appid = param('appid', '', FALSE);
        
 
+        $update_views_on = param('update_views_on', 0);
+
         $shuiyin = param('shuiyin', '', FALSE);
         $sy_type = param('sy_type', 0);
+        $url_rewrite_on = param('url_rewrite_on', 0);
         $user_create_on = param('user_create_on', 0);
         $user_create_email_on = param('user_create_email_on', 0);
         $user_resetpw_on = param('user_resetpw_on', 0);
@@ -67,9 +73,10 @@ if(empty($conf['online_trans_num'])){
         $replace['beinum'] = $beinum;
         $replace['web_url'] = $web_url;
         $replace['appid'] = $appid;
-       
+        $replace['update_views_on'] = $update_views_on;
         $replace['shuiyin'] = $shuiyin;
         $replace['sy_type'] = $sy_type;
+        $replace['url_rewrite_on'] = $url_rewrite_on;
 
         $replace['sitebrief'] = $sitebrief;
         $replace['user_create_on'] = $user_create_on;

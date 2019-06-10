@@ -20,7 +20,7 @@ if (empty($action) || $action == 'list') {
 
 } else if ($action == 'delete') {
     $id     = param('id');
-    $result = db_delte('jubao',array('id'=>$id));
+    $result = db_delete('jubao',array('id'=>$id));
     $touid = param('uid'); 
     $type = param(3,1);
     if($type==1){

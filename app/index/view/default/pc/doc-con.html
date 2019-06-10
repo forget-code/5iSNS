@@ -97,6 +97,7 @@
 foreach($thread['keywords_arr'] as $k=>$v) { ?>
 
 <a class="tag" href="<?php echo r_url('tags-'.$v['id']); ?>" target="_self">
+	
   <?php echo $v['name']; ?>
 </a>
 
@@ -184,14 +185,14 @@ foreach($thread['keywords_arr'] as $k=>$v) { ?>
 <?php }else{ ?>
 	<a href="javascript:void(0);" data-url="<?php echo r_url('api-focus-3'); ?>" data-val="<?php echo $thread['id']; ?>" title="收藏" data-classname="btn-success" data-removeclassname="btn-default" data-title="已收藏" class="focus-action btn btn-success" target="_self"><i class="fa fa-star-o"></i> 收藏</a>
 <?php } ?>
-                            <a class="openformdialog btn btn-default" data-url="<?php echo r_url('user-jubao',array('id'=>$thread['id'],'type'=>2)); ?>" data-formid="report-form" data-id="reporttpl"  data-width="490" data-height="420" data-title="文档举报" href="javascript:;"  target="_self"><i class="fa fa-warning"></i>举报 </a>
+                            <a class="openformdialog btn btn-default" data-url="<?php echo r_url('user-jubao',array('id'=>$thread['id'],'type'=>2)); ?>" data-formid="report-form" data-id="reporttpl"  data-width="auto" data-height="70%" data-title="文档举报" href="javascript:;"  target="_self"><i class="fa fa-warning"></i>举报 </a>
 
                         </div>
                       
                         <div class="pull-right">
                               <a href="javascript:void(0);" data-url="<?php echo r_url('attach-download-'.$thread['id'].'-'.$thread['fileid']); ?>" data-formid="download-form" data-id="downloadtpl"  data-width="400" data-height="320" data-title="文档下载"  target="_blank" class="openformdialog btn btn-primary btn-sm"><i class="fa fa-cloud-download"></i> 下载<span class="hidden-xs">原文档</span>(<?php echo humansize($thread['fileinfo']['size']); ?>)</a>
                           <span class="pull-right">
-                            <?php $plugin->run('share','share',$thread); ?>
+                            <?php $plugin->run('oneshare','share',$thread); ?>
                            </span>
                         </div>
                     </div>
@@ -210,7 +211,7 @@ foreach($thread['keywords_arr'] as $k=>$v) { ?>
 <input type="hidden" value="<?php echo $token; ?>"	name="token" />
 											<input type="hidden" value="<?php echo $thread['id']; ?>"	name="topic_id" />
 											<input type="hidden" value="0" id="comment_pid"	name="pid" />
-												<textarea name="content" placeholder="写下你的评论..." class="comment-area"></textarea>
+												<textarea name="content" id="summernote" placeholder="写下你的评论..." class="comment-area"></textarea>
 												<div class="write-function-block">
 													<button type="submit" class="btn col-md-3 btn-primary pull-right wi-margin-top" name="comments" id="comments"
 													 target="_self">发表评论</button> </div>
@@ -265,10 +266,18 @@ foreach($comment_list as $key=>$vo){
 </div>
 </header>
 														<div class="wi-margin-top comment-body">
-															<p><?php echo $vo['content']; ?></p>
+															<p><?php echo htmlspecialchars_decode($vo['content']); ?></p>
 														</div>
 														<div class="tool-group">
-															<a class="button_agree" dataid="<?php echo $vo['id']; ?>" target="_self"><i class="fa fa-thumbs-o-up"></i> <span><?php echo $vo['ding']; ?>人赞</span></a>
+	<?php if(hasfocus($vo['id'],4)){ ?>
+	<a href="javascript:void(0);" class="button_agree" target="_self"><i class="fa fa-thumbs-up"></i> <?php echo $vo['ding']; ?>人赞</a>
+<?php }else{ ?>
+	<a href="javascript:void(0);" data-url="<?php echo r_url('api-focus-4'); ?>" data-val="<?php echo $vo['id']; ?>" title="赞"  data-title="<?php echo $vo['ding']+1; ?>人赞" class="focus-action button_agree" target="_self"><i class="fa fa-thumbs-o-up"></i> <?php echo $vo['ding']; ?>人赞</a>
+<?php } ?>														
+
+															
+
+															
 												
 															<a class="getcommentlist" dataid="<?php echo $vo['id']; ?>" target="_self"><i class="fa fa-reply"></i>
 																<span>回复<?php echo $vo['reply']; ?></span></a>
@@ -529,7 +538,9 @@ foreach($vo['child'] as $k=>$v){
                 </div>
 </script>
 	<?php include $conf['view_path'].'footer.inc.html';?>
-
+ <link href="<?php echo $conf['public_dir']; ?>/summernote/summernote.css" rel="stylesheet" />
+	 <script src="<?php echo $conf['public_dir']; ?>/summernote/summernote.js">
+    </script>
 
 <?php if($raty['has']==1){ ?>
 <script type="text/javascript">
@@ -859,12 +870,63 @@ $(".wenku-viewer-more-btn").click(function () {
        
 
 });
-    
+     var $summernote = $('#summernote').summernote(
+    {
+  height: 100,                 // set editor height
+  focus: false,
+  dialogsInBody: true,
+  toolbar : [
+
+     [ 'style', [ 'style'] ],
+                [
+                    'style',
+                    [ 'bold', 'italic', 'underline','fontsize'] ],
+               
+                
+                [ 'color', [ 'color' ] ],
+                [
+                    'insert',
+                   [ 'link', 'hr' ] ],// 自定义按钮展示
+                
+                [ 'codetag', [ 'codetag','pre','blockquote'] ],
+               ['picture',['picture']], //插入图片 
+               
+               ['myphoto'],    ['clear'],             
+               
+               
+        ],
+         //调用图片上传
+            callbacks: {
+                onImageUpload: function (files) {
+                  xn.upload_file(files[0], xn.url('attach-create-image',1), '',function(code,ret){
+                    console.log(code,ret);
+if(code==0){
+   var imgNode = document.createElement("img");
+    $(imgNode).addClass("topic_img").attr('data-id',ret.id+'-'+ret.sha1);  
+
+   imgNode.src = ret.file_url;
+   $summernote.summernote('insertNode',imgNode);
+}else{
+   $.sns5i_notify(ret.message,'danger');
+}
+                        
+
+                  });
+                  
+                },
+
+//onBlur:function(){console.log('Editable area loses focus');},
+//onPaste:function(e){console.log('Called event paste');},
+//onKeyup:function(e){console.log('Key is released:',e.keyCode);},
+//onEnter:function(){console.log('Enter/Return key pressed');}
+            }
+                 // set focus to editable area after initializing summe
+    });
   var jform = $('.create_comment_topic');
 
 
   jform.on('submit', function() {
-  	var jsubmit = $(this).find('button');
+  	var jsubmit = $(this).find('#comments');
     var postdata = $(this).serialize();
    var _this = this;
     jsubmit.button('sending').button('disabled');
@@ -875,8 +937,8 @@ $(".wenku-viewer-more-btn").click(function () {
         
         $.sns5i_notify(ret.message,'success','','',false,function(){
         	//window.location.reload();
-        	$(_this)[0].reset();
-        	jsubmit.button('reset');
+        	$summernote.summernote('code','');
+        	jsubmit.button('发表评论').button('reset');
         });
          
       // 

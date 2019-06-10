@@ -865,7 +865,50 @@ $.unparam = function(str) {
 		return params;
 	}, {});
 }
+$.xpost_async = function(url, postdata, callback,async,progress_callback) {
+	if($.isFunction(postdata)) {
+		callback = postdata;
+		postdata = null;
+	}
+	
+	$.ajax({
+		type: 'POST',
+		url: url,
+		data: postdata,
+		dataType: 'text',
+		async:async,
+		progress: function(e) {
+			if (e.lengthComputable) {
+				if(progress_callback) progress_callback(e.loaded / e.total * 100);
+				
+			}
+		},
+		success: function(r){
+			
+			if(!r) return callback(-1, 'Server Response Empty!');
+			var s = xn.json_decode(r);
+			
+			if(!s || s.code === undefined) return callback(-1, 'Server Response Not JSON：'+r);
+			if(s.code == 0) {
+				return callback(0, s);
+			//系统错误
+			} else if(s.code < 0) {
+				return callback(s.code, s);
+			} else {
+				return callback(s.code, s);
+			}
+		},
+		error: function(xhr, type) {
 
+			if(type != 'abort' && type != 'error' || xhr.status == 403) {
+				return callback(-1000, "xhr.responseText:"+xhr.responseText+', type:'+type);
+			} else {
+				return callback(-1001, "xhr.responseText:"+xhr.responseText+', type:'+type);
+				console.log("xhr.responseText:"+xhr.responseText+', type:'+type);
+			}
+		}
+	});
+};
 $.xpost = function(url, postdata, callback, progress_callback) {
 	if($.isFunction(postdata)) {
 		callback = postdata;
@@ -877,6 +920,7 @@ $.xpost = function(url, postdata, callback, progress_callback) {
 		url: url,
 		data: postdata,
 		dataType: 'text',
+		
 		timeout: 6000000,
 		progress: function(e) {
 			if (e.lengthComputable) {

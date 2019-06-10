@@ -26,31 +26,49 @@ global $conf;
 	/thread/create/1
 */
 
-function r_url($url, $extra = array(),$module='') {
+function r_url($url, $extra = array(),$modulename='') {
+	global $module;
 	$conf = _SERVER('conf');
 	!isset($conf['url_rewrite_on']) AND $conf['url_rewrite_on'] = 0;
 
 	$r = $path = $query = '';
-	
+    $path = http_url_path();
 
-	if(strpos($url, '/') !== FALSE) {
-		$path = substr($url, 0, strrpos($url, '/') + 1);
-		$query = substr($url, strrpos($url, '/') + 1);
-	} else {
-		$path = '';
-		$query = $url;
+	if(!empty($modulename)){
+		$path .= $modulename.'/';
+	}elseif($module!='index'){
+        $path .= $module.'/';
 	}
-	if(!empty($module)){
-		$path = http_url_path().$path;
-	}
+
+
 	if($conf['url_rewrite_on'] == 0) {
-		$r = $path . $query . '.htm';
+
+
+		$query_arr = explode('-', $url);
+
+		$query_str = '?c='.$query_arr[0];
+
+		
+        if(empty($query_arr[1])){
+       	  
+        }else{
+        	
+        	$query_str .= '&a='.$query_arr[1];
+            $str = $query_arr[0].'-'.$query_arr[1].'-';
+            if(count($query_arr)>2){
+            	$str_url = str_replace($str,'',$url);
+                $query_str .= '&e='.$str_url;
+            }
+        	
+        	
+        }
+        
+       
+		
+
+		$r = $path.$query_str;
 	} elseif($conf['url_rewrite_on'] == 1) {
-		$r = $path . $query . '.htm';
-	} elseif($conf['url_rewrite_on'] == 2) {
-		$r = $path . str_replace('-', '/', $query);
-	} elseif($conf['url_rewrite_on'] == 3) {
-		$r = $path . str_replace('-', '/', $query);
+		$r = $path . $url . '.htm';
 	}
 	// 附加参数
 	if($extra) {

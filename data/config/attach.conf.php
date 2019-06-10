@@ -1,7 +1,7 @@
 <?php
 
 return array (
-	'attach'=> array('zip','rar'),
+	'attach'=> array('zip','rar','gz'),
 	'video' => array('av','wmv','wav','wma','avi','rm','rmvb','mp4'),
 	'music' => array('mp3','mp4'),
 	'exe' => array('exe','bin'),

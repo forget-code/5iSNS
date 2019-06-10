@@ -153,26 +153,15 @@ CREATE TABLE IF NOT EXISTS `5isns_usergrade` (
   `days` int(11) NOT NULL DEFAULT '0' COMMENT '天数涉及查看付费内容|下载附件|下载文档',
   `nums` int(11) NOT NULL DEFAULT '0' COMMENT '次数涉及下载附件|下载文档',
   `bili` int(11) NOT NULL DEFAULT '0' COMMENT '比例涉及付费内容|下载附件|下载文档',
-  `limittime` varchar(255) NOT NULL DEFAULT '0' COMMENT '时间涉及发帖|发文档|回帖',
+  `limittime` varchar(255) NOT NULL DEFAULT '0' COMMENT '时间涉及发帖|发文档|回帖|下载',
   `cover_id` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '等级图标id',
   `status` tinyint(1) NOT NULL DEFAULT '1' COMMENT '状态',
   `create_time` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '安装时间',
   `update_time` int(11) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COMMENT='会员等级表';
-INSERT INTO `5isns_usergrade` VALUES ('2', '普通会员', '0', '2', '1,2,3,4', '0', '0', '100', '300,300,300', '0', '1', '1556592145', '0');
+INSERT INTO `5isns_usergrade` VALUES ('2', '普通会员', '0', '2', '1,2,3,4', '0', '0', '100', '0,0,0,0', '0', '1', '1556592145', '0');
 
-DROP TABLE IF EXISTS `5isns_user_bind`;
-CREATE TABLE IF NOT EXISTS `5isns_user_bind` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT 'ID',
-  `openid` varchar(255) NOT NULL DEFAULT '' COMMENT 'openid',
-  `type` varchar(100) NOT NULL DEFAULT '' COMMENT '是什么类型的登录',
-  `uid` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '用户id',
-  `status` tinyint(1) NOT NULL DEFAULT '1' COMMENT '数据状态',
-  `create_time` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '创建时间',
-  `update_time` int(11) unsigned NOT NULL DEFAULT '0',
-  PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='第三方登录表';
 
 DROP TABLE IF EXISTS `5isns_chongzhi`;
 CREATE TABLE IF NOT EXISTS `5isns_chongzhi` (
@@ -577,7 +566,7 @@ CREATE TABLE `5isns_usersandother` (
   `name` varchar(100) NOT NULL COMMENT '名称',
   `uid` int(11) NOT NULL COMMENT '用户id',
   `did` int(11) NOT NULL COMMENT '管理目标id',
-  `type` tinyint(1) NOT NULL DEFAULT '0' COMMENT '关联目标类型0用户1帖子2话题3文档4消息',
+  `type` tinyint(1) NOT NULL DEFAULT '0' COMMENT '关联目标类型0用户1帖子2话题3文档4消息5评论点赞',
   `create_time` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '创建时间',
   `update_time` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '更新时间',
   `status` tinyint(1) NOT NULL DEFAULT '1' COMMENT '数据状态',

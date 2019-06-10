@@ -67,6 +67,7 @@ if (empty($action) || $action == 'list') {
         $input['limittime1'] = form_text('limittime[]', 0,'200px');
         $input['limittime2'] = form_text('limittime[]', 0,'200px');
         $input['limittime3'] = form_text('limittime[]', 0,'200px');
+        $input['limittime4'] = form_text('limittime[]', 0,'200px');
         $input['name'] = form_text('name', '');
         $input['score'] = form_text('score', 0,'200px');
 
@@ -76,7 +77,7 @@ if (empty($action) || $action == 'list') {
      $id   = param('id');
      $info = db_find_one('usergrade',array('id'=>$id));
      $limittme = explode(',',$info['limittime']);
-     
+     if(empty($limittme[3])){$limittme[3]=0;}
     if ($method == 'POST') {
 
        
@@ -142,6 +143,7 @@ if (empty($action) || $action == 'list') {
         $input['limittime1'] = form_text('limittime[]', $limittme[0],'200px');
         $input['limittime2'] = form_text('limittime[]', $limittme[1],'200px');
         $input['limittime3'] = form_text('limittime[]', $limittme[2],'200px');
+        $input['limittime4'] = form_text('limittime[]', $limittme[3],'200px');
         $input['name'] = form_text('name', $info['name']);
         $input['score'] = form_text('score',$info['score'],'200px');
 

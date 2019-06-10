@@ -15,6 +15,7 @@ function admin_token_check() {
 	$admin_token = param('5isns_admin_token');
 	
 	if(empty($admin_token)) {
+		
 		$_REQUEST[1] = 'index';
 		$_REQUEST[2] = 'login';
 	} else {
@@ -30,6 +31,7 @@ function admin_token_check() {
 		// Background / more than 3600 automatic withdrawal.
 		//if($_ip != $longip || $time - $_time > 3600) {
 		if((XN_ADMIN_BIND_IP && $_ip != $longip || !XN_ADMIN_BIND_IP) && $time - $_time > 3600) {
+
 			setcookie('5isns_admin_token', '', 0, '', '', '', TRUE);
 			message(-1, '管理登陆令牌失效，请重新登录');
 		}
@@ -50,10 +52,11 @@ function admin_token_set() {
 	$key = md5((XN_ADMIN_BIND_IP ? $longip : '').$useragent_md5.xn_key());
 
 	
-	$admin_token = param('5isns_admin_token');
+	//$admin_token = param('5isns_admin_token');
 	$s = "$longip	$time";
 	
 	$admin_token = xn_encrypt($s, $key);
+
 	setcookie('5isns_admin_token', $admin_token, $time + 3600, '',  '', 0, TRUE);
 
 }

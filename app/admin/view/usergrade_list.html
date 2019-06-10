@@ -76,8 +76,8 @@ echo str_replace(array('1','2','3','4','5','6',','),array('发帖<br>','发文�
                   </td>
                    <td>
 <?php 
-$limitarr = explode(',',$vo['limittime']);
-echo '发帖时间限制:'.humanmiao($limitarr[0]).'<br>发文档时间限制:'.humanmiao($limitarr[1]).'<br>评论时间限制:'.humanmiao($limitarr[2]);
+$limitarr = explode(',',$vo['limittime']);if(empty($limitarr[3])){$limitarr[3]=0;}
+echo '发帖时间限制:'.humanmiao($limitarr[0]).'<br>发文档时间限制:'.humanmiao($limitarr[1]).'<br>评论时间限制:'.humanmiao($limitarr[2]).'<br>下载时间限制:'.humanmiao($limitarr[3]);
  ?>
 
                   </td>

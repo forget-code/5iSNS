@@ -49,7 +49,7 @@ $data['token'] = param('token');
 $data['time'] = param('time');
 $time1 = $data['time'];
 $token = md5($conf['auth_key'].$conf['appid'].$time1);
-if($time-intval($time1)>60){
+if($token!=$data['token']||$time-intval($time1)>60){
     //过时了
 }else{
 $tmpanme = $data['file']['name'];
@@ -126,7 +126,7 @@ if(!in_array(3,$userqx['quanxian'])){
   }
 
 $content = param('content');//后期添加表情等需要进行处理。
-$content = clearHtml(htmlspecialchars_decode($content));
+$clearcontent = clearHtml(htmlspecialchars_decode($content));
 if(empty($content)){
     message(-1, '内容为空');
 }
@@ -138,6 +138,9 @@ unset($_SESSION['doc_con']['token']);
 }else{
 message(-1, '请不要重复提交');
 }
+$fid = param('topic_id');
+$topicinfo = doc_read($fid);
+
 preg_match_all('/@(.*?):/', $content, $matches);
 if($matches[1]){
     foreach ($matches[1] as $key => $value) {
@@ -145,6 +148,8 @@ if($matches[1]){
         if($userinfo){
           $content =  str_replace('@'.$value.':','<a href="'.r_url('user-'.$userinfo['id']).'">@'.$value.':</a>',$content);
           //给每个用户发送消息，有人@ta
+          send_sys_message($userinfo['id'],'有人在文档《<a href="'.r_url('doc-'.$fid).'">'.$topicinfo['title'].'</a>》评论中提到了你');
+          
         }else{
           $content =  str_replace('@'.$value.':','',$content);
         }
@@ -152,7 +157,7 @@ if($matches[1]){
     }
 }
 
-$fid = param('topic_id');
+
 $pid = param('pid');
 $arr = array(
     'uid'=>$uid,
@@ -169,16 +174,16 @@ $result = db_create('comment', $arr);
                db_update('comment',array('id'=>$pid),array('reply+'=>1)); 
 
             }else{
-                 $topicinfo = doc_read($fid);
-$subject = '有人评论了你的文档&nbsp;&nbsp;<a href="'.r_url('doc-'.$fid).'">'.$topicinfo['title'].'</a>';
-$mail_subject = '有人评论了你的文档&nbsp;&nbsp;<a href="'.http_url_path().r_url('doc-'.$fid).'">'.$topicinfo['title'].'</a>';
+                 
+$subject = '有人评论了你的文档《<a href="'.r_url('doc-'.$fid).'">'.$topicinfo['title'].'</a>》';
+$mail_subject = '有人评论了你的文档《<a href="'.http_url_path().r_url('doc-'.$fid).'">'.$topicinfo['title'].'</a>》';
 
 send_message($topicinfo['uid'],$subject,$mail_subject,'new_comment_content');
 
 
 
 
-
+find_content_img($content,7,$result);
 
                db_update('doccon',array('id'=>$fid),array('reply+'=>1)); 
             }
@@ -274,8 +279,8 @@ if($look_info){
                    $focususers = db_find_column('usersandother',array('type'=>0,'did'=>$uid),'uid');//得到所有关注该用户的用户
                 if(!empty($focususers)){
                   
-$subject = '你关注的用户分享了文档&nbsp;&nbsp;<a href="'.r_url('doc-'.$result).'">'.$r[1]['title'].'</a>';
-$mail_subject = '你关注的用户分享了文档&nbsp;&nbsp;<a href="'.http_url_path().r_url('doc-'.$result).'">'.$r[1]['title'].'</a>';
+$subject = '你关注的用户分享了文档《<a href="'.r_url('doc-'.$result).'">'.$r[1]['title'].'</a>》';
+$mail_subject = '你关注的用户分享了文档《<a href="'.http_url_path().r_url('doc-'.$result).'">'.$r[1]['title'].'</a>》';
 
 
                     foreach ($focususers as $key => $value) {
@@ -358,7 +363,7 @@ $filetypes         = include DATA_PATH . 'config/attach.conf.php';
             }
             unset($r[1]['token']);
             $r[1]['update_time'] = $time;
-
+            //$r[1]['status'] = 0;
             
             
             $result = doc_update($id, $r[1]);

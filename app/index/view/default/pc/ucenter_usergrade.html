@@ -40,7 +40,7 @@
 	<td><?php echo str_replace(array('1','2','3','4','5','6',','),array('发帖<br>','发文档<br>','评论<br>','查看付费内容<br>','下载附件<br>','下载文档',''),$userqx['extend']['up_grades_type']); ?></td>
 	<td><?php 
 $limitarr = explode(',',$userqx['extend']['up_grades_limittime']);
-echo '发帖时间限制:'.humanmiao($limitarr[0]).'<br>发文档时间限制:'.humanmiao($limitarr[1]).'<br>评论时间限制:'.humanmiao($limitarr[2]);
+echo '发帖时间限制:'.humanmiao($limitarr[0]).'<br>发文档时间限制:'.humanmiao($limitarr[1]).'<br>评论时间限制:'.humanmiao($limitarr[2]).'<br>下载时间限制:'.humanmiao($limitarr[3]);
  ?></td>
 							<td>无限制</td>
 							<td>无限制</td>
@@ -55,7 +55,8 @@ echo '发帖时间限制:'.humanmiao($limitarr[0]).'<br>发文档时间限制:'.
 	<td><?php echo str_replace(array('1','2','3','4','5','6',','),array('发帖<br>','发文档<br>','评论<br>','查看付费内容<br>','下载附件<br>','下载文档',''),$userqx['extend']['grades_type']); ?></td>
 	<td><?php 
 $limitarr = explode(',',$userqx['extend']['grades_limittime']);
-echo '发帖时间限制:'.humanmiao($limitarr[0]).'<br>发文档时间限制:'.humanmiao($limitarr[1]).'<br>评论时间限制:'.humanmiao($limitarr[2]);
+
+echo '发帖时间限制:'.humanmiao($limitarr[0]).'<br>发文档时间限制:'.humanmiao($limitarr[1]).'<br>评论时间限制:'.humanmiao($limitarr[2]).'<br>下载时间限制:'.humanmiao($limitarr[3]);
  ?></td>
  <td><?php if($userqx['extend']['grades_days']>0){echo $userqx['extend']['grades_days'];}else{echo '无限制';}?></td>
 							<td><?php if($userqx['extend']['grades_nums']>0){echo $userqx['extend']['grades_nums'];}else{echo '无限制';}?></td>
@@ -72,7 +73,7 @@ echo '发帖时间限制:'.humanmiao($limitarr[0]).'<br>发文档时间限制:'.
 	<td><?php echo str_replace(array('1','2','3','4','5','6',','),array('发帖<br>','发文档<br>','评论<br>','查看付费内容<br>','下载附件<br>','下载文档',''),implode(',',$userqx['quanxian'])); ?></td>
 	<td><?php 
 
-echo '发帖时间限制:'.humanmiao($userqx['quanxian_limit_topic']).'<br>发文档时间限制:'.humanmiao($userqx['quanxian_limit_doc']).'<br>评论时间限制:'.humanmiao($userqx['quanxian_limit_pinglun']);
+echo '发帖时间限制:'.humanmiao($userqx['quanxian_limit_topic']).'<br>发文档时间限制:'.humanmiao($userqx['quanxian_limit_doc']).'<br>评论时间限制:'.humanmiao($userqx['quanxian_limit_pinglun']).'<br>下载时间限制:'.humanmiao($userqx['quanxian_limit_download']);
  ?></td>
 							<td><?php if($userqx['days']>0){echo $userqx['days'];}else{echo '无限制';}?></td>
 							<td><?php if($userqx['nums']>0){echo $userqx['nums'];}else{echo '无限制';}?></td>
@@ -102,7 +103,8 @@ echo '发帖时间限制:'.humanmiao($userqx['quanxian_limit_topic']).'<br>发�
 							<td><?php echo str_replace(array('1','2','3','4','5','6',','),array('发帖<br>','发文档<br>','评论<br>','查看付费内容<br>','下载附件<br>','下载文档',''),$v['type']); ?></td>
 							<td><?php 
 $limitarr = explode(',',$v['limittime']);
-echo '发帖时间限制:'.humanmiao($limitarr[0]).'<br>发文档时间限制:'.humanmiao($limitarr[1]).'<br>评论时间限制:'.humanmiao($limitarr[2]);
+
+echo '发帖时间限制:'.humanmiao($limitarr[0]).'<br>发文档时间限制:'.humanmiao($limitarr[1]).'<br>评论时间限制:'.humanmiao($limitarr[2]).'<br>下载时间限制:'.humanmiao($limitarr[3]);
  ?></td>
 							<td><?php echo $v['days'];?></td>
 							<td><?php echo $v['nums'];?></td>

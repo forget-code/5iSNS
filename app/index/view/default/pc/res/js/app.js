@@ -77,6 +77,8 @@ var width,height;
 width = !xn.empty($(this).data('width'))? $(this).data('width') :'100%';
 height = !xn.empty($(this).data('height'))? $(this).data('height') :'100%';
 
+var async = !$(this).data('async')? $(this).data('async') :true;
+
 var title = $(this).data('title');
 var id = $(this).data('id');
 var formid = $(this).data('formid');
@@ -91,36 +93,82 @@ var url = $(this).data('url');
       success: function(layero, index){
 
          
-          $('.layerform').on('submit', function() {
+$('.layerform').on('submit', function() {
     var postdata = $(this).serialize();
     var jsubmit = $(this).find('button[type="submit"]');
     jsubmit.button('loading').button('disabled');
-    
-    $.xpost(url, postdata, function(code, ret) {
+
+   $.xpost_async(url, postdata, function(code, ret) {
      
       if (code == 0) {
-        
-        
-        if(!xn.empty(ret.url)){
-   
-   $.sns5i_notify(ret.message,'success',ret.url,1000,'',function(){
-         window.open(ret.url);
-          layer.close(index);
+        $.sns5i_notify(ret.message,'success','',1000,'',function(){
+       
+
 
         });
-}else{
-  $.sns5i_notify(ret.message,'success','',1000,'',function(){
-          layer.close(index);
-        });
-}
         
+        if(!xn.empty(ret.url)){
+
+         window.open(ret.url);
+
+        }
         
+         layer.close(index); 
         
       } else {
         $.sns5i_notify(ret.message,'danger');
         jsubmit.button('reset');
       }
-    });
+    },async);
+
+  /*$.ajax({
+    type: 'POST',
+    url: url,
+    data: postdata,
+    dataType: 'text',
+    async:async,
+    success: function(r){
+      
+      if(!r){
+        $.sns5i_notify('Server Response Empty!','danger','',1000,'',function(){
+          layer.close(index);
+         });
+      }
+      var s = xn.json_decode(r);
+      
+      if(!s || s.code === undefined){
+
+         $.sns5i_notify('Server Response Not JSON：'+r,'danger','',1000,'',function(){
+          layer.close(index);
+         });
+      } 
+      if(s.code == 0) {
+         $.sns5i_notify(s.message,'success','',1000,'',function(){
+       
+
+
+        });
+     if(!xn.empty(s.url)){
+   
+  
+          window.open(s.url); 
+       
+         
+     }
+     layer.close(index);      
+      } else {
+       
+         $.sns5i_notify(s.message,'danger');
+        jsubmit.button('reset');
+      }
+    },
+    error: function(xhr, type) {
+
+      $.sns5i_notify("xhr.responseText:"+xhr.responseText+', type:'+type,'danger','',1000,'',function(){
+          layer.close(index);
+      });
+    }
+  });*/
     return false;
   });
       }

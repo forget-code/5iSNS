@@ -58,7 +58,7 @@
             <label class="col-sm-1 form-control-label">付费内容</label>
             <div class="col-sm-10">
               <?php echo $input['free'];?>
-              <p class="wi-margin-top text-muted small">部分付费则显示免费内容部分，全部付费则不显示内容</p>
+              <p class="wi-margin-top text-danger small">部分付费显示<code>付费内容分割线</code>以上的内容，全部付费则内容全部不显示。</p>
             </div>
           </div>
             <div class="form-group">
@@ -122,9 +122,8 @@
 
     <script src="<?php echo $conf['public_dir']; ?>/summernote/summernote.js">
     </script>
-    <link href="<?php echo $conf['public_dir']; ?>fcup/css/style.css" rel="stylesheet" />
-        <script src="<?php echo $conf['public_dir']; ?>fcup/js/jquery.fcup.js">
-        </script>
+   
+       
  
         <script type="text/javascript">
 

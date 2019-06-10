@@ -92,13 +92,13 @@ return array (
     'expoint2' => '扩展积分2',
     'expoint3' => '扩展积分3',
   ),
-    'pointrule' => 
+  'pointrule' => 
   array (
     'yaoqing' => '邀请注册',
     'login' => '登录',
     'docadd' => '发布文档',
     'docdelete' => '文档被删除',
-     'bindmobile' => '绑定手机',
+    'bindmobile' => '绑定手机',
     'bindmail' => '绑定邮箱',
     'topicadd' => '发布文章',
     'topicdelete' => '文章被删除',
@@ -114,9 +114,9 @@ return array (
   'logo_pc_url' => 'public/common/images/logo.png',
   'logo_water_url' => 'public/common/images/water-small.png',
   'sitename' => '5iSNS内容付费系统',
-  'web_url' => 'http://bbs.imzaker.com',
+  'web_url' => 'http://www.5isns.com',
   'api_url' => 'http://api.imzaker.com:80',
-  'beinum' => '冀ICP备17024797号-1',
+  'beinum' => '',
   'shuiyin' => '5iSNS实验室',
   'sy_type' => 1,
   'sitebrief' => '知识付费意味着人们对高质量知识内容的渴求，也是对知识的尊重，有迫切需要的人自然会乐于付费。社交网络开始服务知识付费是大势所趋。在互联网惯性下，内容、社交、付费，三者合一，站长将在此基础上享受更多红利。',
@@ -141,21 +141,22 @@ return array (
   'url_rewrite_on' => 0,
   'index_theme_name' => 'default',
   'disabled_plugin' => 0,
-  'version' => '1.0.4',
+  'version' => '1.0.6',
   'static_version' => '?1.0',
   'cdn_use' => 0,
   'online_trans' => 0,
-  'appid' => '',
+  'appid' => '1',
   'module_arr' => 
   array (
     0 => 'index',
     1 => 'admin',
+  
   ),
   'chongzhi' => 
   array (
     'bili' => 10,
   ),
-    'tixian' => 
+  'tixian' => 
   array (
     'bili' => 10,
   ),

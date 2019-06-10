@@ -56,7 +56,7 @@
     </div>
     <div class="summary">
         <h2 class="title">
-            <a href="<?php echo r_url('thread-'.$vo['id']); ?>">
+            <a <?php if($vo['settop']==1){?>style="font-weight:bold;color:#D6153C"<?php } ?> href="<?php echo r_url('thread-'.$vo['id']); ?>">
              <?php echo $vo['title']; ?></a>
 
                         <div class="tags">
@@ -64,7 +64,8 @@
 
 foreach($vo['keywords_arr'] as $k=>$v) { ?>
 
-<a class="tag" href="<?php echo r_url('tags-'.$v['id']); ?>" target="_self">
+<a class="tag"  href="<?php echo r_url('tags-'.$v['id']); ?>" target="_self">
+  
   <?php echo $v['name']; ?>
 </a>
 
@@ -74,7 +75,8 @@ foreach($vo['keywords_arr'] as $k=>$v) { ?>
             <p class="uk-article-meta">
                
               <span class="uk-vertical-align-middle">
-              <a href="<?php echo r_url('user-'.$vo['user']['id']); ?>" target="_self">
+
+              <a href="<?php echo r_url('user-'.$vo['user']['id']); ?>"  target="_self">
               <img class="avatar-24 no-circle" src="<?php echo $vo['user']['avatar_url']; ?>" alt="<?php echo $vo['user']['nickname']; ?>">
               </a>
                 <a href="<?php echo r_url('user-'.$vo['user']['id']); ?>" target="_self">

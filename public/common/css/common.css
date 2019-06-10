@@ -171,3 +171,42 @@ background: #337ab7;
     color: #fff;
     text-decoration:none;
 }
+#filelist li{
+    border-bottom:1px dotted #ddd;
+    clear:both;
+    overflow:hidden;
+    padding:10px 15px;
+}
+#filelist input{
+    border-radius:2px;
+    width:100px;
+    
+    outline:none;
+}
+
+hr.hidecontent {
+    
+position:relative;
+overflow: visible;
+    margin:15px auto;
+
+    border: 0;
+
+    height: 4px;
+
+    background: #333;
+
+    background-image: linear-gradient(to right, red, #333, rgb(9, 206, 91));
+   
+}
+hr.hidecontent:before{
+    content:'横线以下为付费内容';
+    position: absolute;
+right:0px;
+    top:-15px;
+    padding:5px 10px;
+    background:#fff;
+    text-align:center;
+    border-radius:3px;
+    border:1px solid #ddd;
+}

@@ -126,7 +126,14 @@ function nav_bottom(){
 	
 	return $navlist;
 }
-
+function nav_url($link){
+	if(substr($link,0,7) == 'http://'||substr($link,0,8) == 'https://'){
+        $url = $link;
+    }else{
+        $url = r_url($link);
+    }
+    return $url;
+}
 function nav_list_cache_delete() {
 	global $conf;
 	static $deleted = FALSE;

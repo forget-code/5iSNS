@@ -27,6 +27,7 @@ function sess_close() {
 
 // 如果 cookie 中没有 bbs_sid, php 会自动生成 sid，作为参数
 function sess_read($sid) { 
+
 	global $g_session, $longip, $time;
 	//echo "sess_read() sid: $sid <br>\r\n";
 	if(empty($sid)) {
@@ -48,6 +49,7 @@ function sess_read($sid) {
 	$g_session = $arr;
 	// 在 php 5.6.29 版本，需要返回 session_decode()
 	//return $arr ? session_decode($arr['data']) : '';
+	
 	return $arr ? $arr['data'] : '';
 }
 
@@ -216,6 +218,7 @@ function sess_start() {
 	
 	//echo "sess_start() sid: $sid <br>\r\n";
 	//print_r(db_find('session'));
+	
 	return $sid;
 }
 

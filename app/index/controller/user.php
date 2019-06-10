@@ -151,39 +151,6 @@ $pagination = pagination(r_url('user-myjifen', array('page' => 'pagenum')), $tot
 
     include $conf['view_path'] . 'ucenter_myjifen.html';
 
-} elseif ($action == 'up_usergrade') {
-
-           $id = param(3,1);
-           $nowtime = time();
-           
-           $updata = array();
-           $upgrade = db_find_one('usergrade',array('gmtype'=>2,'status'=>1,'score'=>array('<='=>$user['extend']['expoint1'])),array('score'=>-1));
-           if($upgrade['id']!=$user['extend']['up_grades']){
-                //升级会员信息
-               
-                $updata +=array('up_grades'=>$upgrade['id'],'up_grades_type'=>$upgrade['type'],'up_grades_bili'=>$upgrade['bili'],'up_grades_name'=>$upgrade['name'],'up_grades_limittime'=>$upgrade['limittime'],'up_grades_time'=>$nowtime);
-                
-             
-           }
-           if($user['extend']['grades']>0){
-
-           
-
-            if($user['extend']['grades_days']>0){//大于0才有比较的意义，否则是不限制天数
-                $days = floor(($nowtime-$user['extend']['grades_time'])/86400);
-                if($user['extend']['grades_days']<=$days){
-                    $updata +=array('grades'=>0);
-                }else{
-                    $updata +=array('grades_days-'=>$days);
-                }
-            }
-            
-           }
-
-          
-user_extend_update($uid,$updata);
-message(0, '用户会员组更新成功');
-
 }elseif ($action == 'buy') {
 
 empty($user) AND message(-1, '用户未登录');
@@ -226,6 +193,7 @@ if($r){
 if($type==5){
 $updata = array('grades'=>$gradeinfo['id'],'grades_type'=>$gradeinfo['type'],'grades_days'=>$gradeinfo['days'],'grades_nums'=>$gradeinfo['nums'],'grades_bili'=>$gradeinfo['bili'],'grades_name'=>$gradeinfo['name'],'grades_limittime'=>$gradeinfo['limittime'],'grades_time'=>time());
 user_extend_update($uid,$updata);
+$userqx = user_qx($uid);
 }
 
 

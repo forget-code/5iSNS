@@ -6,18 +6,18 @@
 		<div class="footLinks">
 			<?php 
                              foreach($nav_bottom as $key=>$vo) {  
-                             echo '<span><a hidefocus="true" href="'.$vo['link'].'" target="'.$vo['target'].'">'.$vo['name'].'</a></span>';
+                             echo '<span><a hidefocus="true" href="'.nav_url($vo['link']).'" target="'.$vo['target'].'">'.$vo['name'].'</a></span>';
                                } 
                      ?> 
 		
-		<span><a hidefocus="true" href="./sitemap.xml">站内文章地图</a></span>
-		<span><a hidefocus="true" href="./sitemap.xml" title="站内文档地图">站内文档地图</a></span>
+		<span><a hidefocus="true" href="/sitemap.xml">站内文章地图</a></span>
+		<span><a hidefocus="true" href="/sitemap.xml" title="站内文档地图">站内文档地图</a></span>
 
 		</div>
 		<div class="footCpy">
 			
 
-			Copyright <font style="font-family:'微软雅黑';">©</font> 2019-2029 我爱SNS工作室
+			Copyright <font style="font-family:'微软雅黑';">©</font> 2019-2029 <a href="http://www.5isns.com/" target="_blank" rel="nofollow">5isns内容付费系统</a>
 			<span style="display:inline-block; margin:0 10px;">|</span><a href="http://www.miitbeian.gov.cn/" target="_blank" rel="nofollow"><?php echo $conf['beinum'] ?></a> 
 			<span style="display:inline-block; margin:0 10px;">|</span>Processed: <b><?php echo substr(microtime(1) - $starttime, 0, 5);?></b>
 			
@@ -36,6 +36,9 @@
 <?php }?>
 
 <script src="<?php echo $conf['public_dir']; ?>common/js/common.js"></script>
-<script src="<?php echo $conf['view_dir']; ?>res/js/app.js"></script>
+<script src="<?php echo $conf['public_view_dir']; ?>res/js/app.js"></script>
+
+
+
 </body>
 </html>
