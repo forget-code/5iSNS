@@ -1,0 +1,260 @@
+<?php include ADMIN_PATH.'view/header.html';?>
+<link href="<?php echo $conf['public_dir']; ?>/summernote/summernote.css" rel="stylesheet" />
+    <div class="wrap">
+        <form class="form-horizontal" data-url="<?php echo r_url('topic-add'); ?>" id="topicaddform" method="post">
+            <div class="form-group">
+                <label class="col-sm-1 control-label">
+                    标题
+                </label>
+                <div class="col-sm-8">
+                    <input class="form-control" id="title" name="title" placeholder="" type="text">
+                    </input>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-1 control-label">
+                    类型
+                </label>
+                <div class="col-sm-2">
+                    <select class="form-control" name="type">
+                        <option value="1">
+                            单页
+                        </option>
+                        <option value="2">
+                            帖子
+                        </option>
+                    </select>
+                </div>
+            </div>
+      <div class="form-group">
+              <label class="col-sm-1 control-label">
+                    话题选择
+                </label>
+    
+    <div class="col-sm-5">
+    
+    <input type="hidden" name="keywords" value="">
+   
+    <div class="clearfix"></div>
+    <div class="biaoqian">
+     <div id="tpt_sel" class="tpt_sels" >
+    <span style="margin-bottom: 5px;float: left;">
+      </span>
+    </div>
+    
+   
+  
+    </div>
+      <div id="tpt_pre" class="keyword-sug-wrap tpt_pres" >
+       
+        <p class="wi-margin-top ">
+        <?php foreach($taglist as $key=>$vo){ ?>
+        <span class="item-tag"><a href="javascript:;"><?php echo $vo['name']; ?></a></span>
+        <?php } ?>
+        
+        </p></div>
+    
+</div>
+  </div>
+            <div class="form-group">
+                <label class="col-sm-1 control-label">
+                    内容
+                </label>
+                <div class="col-sm-11">
+                    <textarea id="summernote" name="content" style="height:300px;">
+                    </textarea>
+                </div>
+            </div>
+        </form>
+    </div>
+ 
+    <?php include ADMIN_PATH.'view/footer.html';?>
+    <script src="<?php echo $conf['public_dir']; ?>/summernote/summernote.js">
+    </script>
+    <link href="<?php echo $conf['public_dir']; ?>fcup/css/style.css" rel="stylesheet" />
+        <script src="<?php echo $conf['public_dir']; ?>fcup/js/jquery.fcup.js">
+        </script>
+        <script type="text/javascript">
+            $(function(){
+
+ $('#tpt_input').keydown(function(e) {
+      if (e.which === 13) {
+        $("#tpt_btn").click();
+        e.preventDefault();
+        return false;
+      }
+    });
+    $("#tpt_sel").on('click', 'a>i', function() {
+      var name = "keywords";
+      var tag = $(this).parent().text();
+      $(this).parent().remove();
+      var tags = new Array();
+      $("#tpt_sel").find('a').each(function() {
+        tags.push($(this).text());
+      });
+      $("input[name=" + name + "]").val(tags.join(","));
+      $("#tpt_pre a:contains('" + tag + "')").removeClass("selected");
+    });
+    $("#tpt_btn").click(function() {
+      var name = "keywords";
+      var tags = $.trim($("input[name=" + name + "]").val());
+      if (tags !== "") {
+        tags = tags.split(",");
+      } else {
+        tags = new Array();
+      }
+      var tag = $.trim($("#tpt_input").val());
+      if (tag !== '' && $.inArray(tag, tags) === -1) {
+        tags.push(tag);
+        $("#tpt_pre a:contains('" + tag + "')").addClass("selected");
+      }
+      $("#tpt_sel").children('span').empty();
+      $.each(tags, function(k, v) {
+        $("#tpt_sel").children('span').append('<a href="javascript:;">' + v + '<i class="fa fa-times"></i></a>');
+      });
+      $("input[name=" + name + "]").val(tags.join(","));
+      $("#tpt_input").val('');
+    });
+    $("#tpt_pre").on('click', 'a:not(.selected)', function() {
+      var name = "keywords";
+      var tags = $.trim($("input[name=" + name + "]").val());
+      if (tags !== "") {
+        tags = tags.split(",");
+      } else {
+        tags = new Array();
+      }
+      var tag = $.trim($(this).text());
+      if (tag !== '' && $.inArray(tag, tags) === -1) {
+        tags.push(tag);
+      }
+      $("#tpt_sel").children('span').empty();
+      $.each(tags, function(k, v) {
+        $("#tpt_sel").children('span').append('<a href="javascript:;">' + v + '<i class="fa fa-times"></i></a>');
+      });
+      $("input[name=" + name + "]").val(tags.join(","));
+      $(this).addClass('selected');
+    });
+        $('body').on('click','.addattach',function(){
+var isimage =$(this).data('type');
+$('#summernote').summernote('focus');
+if(isimage){
+$('#summernote').summernote('insertText', '[pic]'+$(this).data('val')+'[/pic]');
+return false;
+}else{
+ $('#summernote').summernote('insertText', '[attach]'+$(this).data('val')+'[/attach]'); 
+}
+          
+
+});
+
+  $("#myModal").on("shown.bs.modal",function(){
+
+  $.fcup({
+
+    updom: '.fcup',//上传控件的位置dom
+     
+    //upid: 'upid',//上传的文件表单id，有默认
+     
+    shardsize : '2',//切片大小,(单次上传最大值)单位M，默认2M
+     
+    upstr: '上传文件',//按钮文字
+     
+    uploading: '上传中...',//上传中的提示文字
+     
+    upfinished: '上传完成',//上传完成后的提示文字
+     
+    upurl: xn.url('attach-upload_cup',1),//文件上传接口
+     
+    //uptype: 'jpg,png,gif,jpeg',//上传类型检测,用,号分割
+     
+    errtype: '不支持此类型文件',//不支持类型的提示文字
+     
+    //接口返回结果回调
+    upcallback : function(result){
+        var s = xn.json_decode(result);
+        
+         if(s[0]==0){
+           var html='';
+           html +='<div class="attach_list"><div class="filename">'+s[2].name+'</div><div data-val="'+s[2].sha1+'" data-type="'+s[2].isimage+'" class=" btn btn-default btn-xs pull-right addattach" >添加</div></div>';
+          $('#filename').append(html);
+         }else{
+          $.sns5i_notify(s[1],'danger');
+         }
+        
+        
+
+        
+    },
+    upprogress:function(cent){
+      //console.log(cent);
+    }
+     
+});
+});
+
+$('#myModal').on('hide.bs.modal', function () {
+   
+});
+
+   var MyphotoButton = function (context) {
+        var ui = $.summernote.ui;
+
+        
+        var button = ui.buttonGroup([
+        ui.button({
+            contents: '附件/图片',
+            tooltip: '插入附件或图片',
+            click: function () {
+               $('#myModal').modal('show');
+              
+
+            },
+            callback:function(){
+               
+            }
+        }),
+         ui.button({
+            contents: '视频',
+            tooltip: '插入视频',
+             click: function () {
+                context.invoke('videoDialog.show');
+            },
+            
+           
+        })
+    ]
+);
+
+        return button.render();    //按钮渲染
+    }
+
+  $('#summernote').summernote(
+    {
+        height: 300,                 // set editor height
+  focus: true,
+  dialogsInBody: true,
+  toolbar : [
+                [ 'magic', [ 'style' ] ],
+                [
+                    'style',
+                    [ 'bold', 'italic', 'underline',
+                        'clear' ] ],
+                [
+                    'para',
+                    [ 'fontsize', 'ul', 'ol',
+                        'paragraph' ] ],
+                
+                [ 'color', [ 'color' ] ],
+                [
+                    'insert',
+                   [ 'link', 'hr' ] ],// 自定义按钮展示
+                [ 'layout', [ 'codeview' ] ],['myphoto'] ],
+
+
+        buttons: {
+            myphoto: MyphotoButton      //自已定义的按钮函数
+        },
+                 // set focus to editable area after initializing summe
+    });
+});
+        </script>

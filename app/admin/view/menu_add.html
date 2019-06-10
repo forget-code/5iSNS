@@ -1,0 +1,53 @@
+<?php include ADMIN_PATH.'view/header.html';?>
+<div class="wrap">
+    
+    <form class="form-horizontal" id="menuaddform" method="post" data-url="<?php echo r_url('menu-add'); ?>">
+   
+  <div class="form-group">
+    <label class="col-sm-1 control-label">名称</label>
+    <div class="col-sm-4">
+      <input type="text" class="form-control" id="name" name="name" placeholder="">
+    </div>
+  </div>
+  <div class="form-group">
+    <label class="col-sm-1 control-label">排序</label>
+    <div class="col-sm-2">
+      <input type="text" class="form-control"  id="sort" name="sort" placeholder="数字越大越靠前">
+    </div>
+  </div>
+    <div class="form-group">
+    <label class="col-sm-1 control-label">上级菜单</label>
+    <div class="col-sm-4">
+      <?php echo form_select('pid',$select,$pid); ?>
+    </div>
+  </div>
+<div class="form-group">
+    <label class="col-sm-1 control-label">图标</label>
+    <div class="col-sm-3">
+      <input type="text" class="form-control"  id="icon" name="icon" placeholder="fa-类型的图标">
+    </div>
+  </div>
+<div class="form-group">
+    <label class="col-sm-1 control-label">模块</label>
+    <div class="col-sm-2">
+      <input type="text" class="form-control" id="module" name="module" placeholder="所属模块">
+    </div>
+  </div>
+  <div class="form-group">
+    <label class="col-sm-1 control-label">控制器</label>
+    <div class="col-sm-2">
+      <input type="text" class="form-control"  id="controller" name="controller" placeholder="所在控制器文件名">
+    </div>
+  </div>
+<div class="form-group">
+    <label class="col-sm-1 control-label">动作</label>
+    <div class="col-sm-2">
+      <input type="text" class="form-control"   id="action" name="action" placeholder="动作名称">
+    </div>
+  </div>
+     
+    </form>
+ </div>
+
+<?php include ADMIN_PATH.'view/footer.html';?>
+

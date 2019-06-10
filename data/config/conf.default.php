@@ -1,0 +1,168 @@
+<?php
+return array (
+  'cache' => 
+  array (
+    'enable' => true,
+    'type' => 'mysql',
+    'memcached' => 
+    array (
+      'host' => 'localhost',
+      'port' => '11211',
+      'cachepre' => '5isns_',
+    ),
+    'redis' => 
+    array (
+      'host' => 'localhost',
+      'port' => '6379',
+      'cachepre' => '5isns_',
+    ),
+    'xcache' => 
+    array (
+      'cachepre' => '5isns_',
+    ),
+    'yac' => 
+    array (
+      'cachepre' => '5isns_',
+    ),
+    'apc' => 
+    array (
+      'cachepre' => '5isns_',
+    ),
+    'mysql' => 
+    array (
+      'cachepre' => '5isns_',
+    ),
+  ),
+  'batabase_export_config' => 
+  array (
+    'path' => './data/database/',
+    'DATA_BACKUP_PART_SIZE' => 20971520,
+    'DATA_BACKUP_COMPRESS' => 1,
+    'DATA_BACKUP_COMPRESS_LEVEL' => 9,
+  ),
+  'trashlist' => 
+  array (
+    'menu' => 
+    array (
+      0 => '菜单',
+      1 => 'name',
+      2 => 'id',
+    ),
+    'topiccate' => 
+    array (
+      0 => '话题',
+      1 => 'name',
+      2 => 'id',
+    ),
+    'topic' => 
+    array (
+      0 => '帖子',
+      1 => 'title',
+      2 => 'id',
+    ),
+    'doccon' => 
+    array (
+      0 => '文档',
+      1 => 'title',
+      2 => 'id',
+    ),
+    'comment' => 
+    array (
+      0 => '评论',
+      1 => 'content',
+      2 => 'id',
+    ),
+    'user' => 
+    array (
+      0 => '用户',
+      1 => 'nickname',
+      2 => 'id',
+    ),
+    'usergrade' => 
+    array (
+      0 => '会员等级',
+      1 => 'name',
+      2 => 'id',
+    ),
+  ),
+  'pointname' => 
+  array (
+    'point' => '财富值',
+    'expoint1' => '经验',
+    'expoint2' => '扩展积分2',
+    'expoint3' => '扩展积分3',
+  ),
+    'pointrule' => 
+  array (
+    'yaoqing' => '邀请注册',
+    'login' => '登录',
+    'docadd' => '发布文档',
+    'docdelete' => '文档被删除',
+     'bindmobile' => '绑定手机',
+    'bindmail' => '绑定邮箱',
+    'topicadd' => '发布文章',
+    'topicdelete' => '文章被删除',
+    'commentadd' => '发布评论',
+    'commentdelete' => '评论被删除',
+  ),
+  'tmp_path' => './data/tmp/',
+  'log_path' => './data/log/',
+  'view_url' => 'view/',
+  'upload_url' => 'upload/',
+  'upload_path' => './upload/',
+  'logo_mobile_url' => 'public/common/images/logo.png',
+  'logo_pc_url' => 'public/common/images/logo.png',
+  'logo_water_url' => 'public/common/images/water-small.png',
+  'sitename' => '5iSNS内容付费系统',
+  'web_url' => 'http://bbs.imzaker.com',
+  'api_url' => 'http://api.imzaker.com:80',
+  'beinum' => '冀ICP备17024797号-1',
+  'shuiyin' => '5iSNS实验室',
+  'sy_type' => 1,
+  'sitebrief' => '知识付费意味着人们对高质量知识内容的渴求，也是对知识的尊重，有迫切需要的人自然会乐于付费。社交网络开始服务知识付费是大势所趋。在互联网惯性下，内容、社交、付费，三者合一，站长将在此基础上享受更多红利。',
+  'timezone' => 'Asia/Shanghai',
+  'runlevel' => 5,
+  'runlevel_reason' => 'The site is under maintenance, please visit later.',
+  'cookie_domain' => '',
+  'cookie_path' => '',
+  'pagesize' => 10,
+  'postlist_pagesize' => 100,
+  'cache_thread_list_pages' => 10,
+  'online_update_span' => 120,
+  'online_hold_time' => 3600,
+  'session_delay_update' => 0,
+  'upload_image_width' => 927,
+  'attach_dir_save_rule' => 'Ymd',
+  'update_views_on' => 1,
+  'user_create_email_on' => 0,
+  'user_create_on' => 1,
+  'user_resetpw_on' => 1,
+  'admin_bind_ip' => 0,
+  'url_rewrite_on' => 0,
+  'index_theme_name' => 'default',
+  'disabled_plugin' => 0,
+  'version' => '1.0.3',
+  'static_version' => '?1.0',
+  'cdn_use' => 0,
+  'online_trans' => 0,
+  'appid' => '',
+  'module_arr' => 
+  array (
+    0 => 'index',
+    1 => 'admin',
+  ),
+  'chongzhi' => 
+  array (
+    'bili' => 10,
+  ),
+    'tixian' => 
+  array (
+    'bili' => 10,
+  ),
+  'alipay' => 
+  array (
+    'md5Key' => '',
+    'appID' => '',
+  ),
+);
+?>

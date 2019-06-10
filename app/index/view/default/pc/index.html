@@ -1,0 +1,139 @@
+<?php include $conf['view_path'].'header.inc.html';?>
+		<div class="main-wrapper ">
+		<div class="container wi-padding-top">
+
+			<div class="row ">
+				<div class="col-md-9 col-sm-12 ">
+
+					<div class="Card Topstory-noMarginCard Topstory-tabCard">
+						<ul class="uk-subnav">
+							<li <?php if( $type == 1 ){ echo 'class="uk-active"';} ?>><a href="<?php echo r_url('index'); ?>">最新</a></li>
+							<li <?php if( $type == 2 ){ echo 'class="uk-active"';} ?>><a href="<?php echo r_url('index-2'); ?>">推荐</a></li>
+							<li <?php if( $type == 3 ){ echo 'class="uk-active"';} ?>><a href="<?php echo r_url('index-3'); ?>">热门</a></li>
+						</ul>
+						<div>
+							<div></div>
+						</div>
+					</div>
+<div class="art-list">
+
+
+
+
+
+	<ul class="problemlist">
+		<?php foreach($topicslist as $key=>$vo) { ?>
+		<li class="pl-item bb ">
+        <div class="media">
+  <div class="media-left hidden-xs">
+    <a href="<?php echo r_url('thread-'.$vo['id']); ?>" class="figure">
+      <img class="media-object" src="<?php echo $vo['first_img']; ?>" alt="<?php echo $vo['title']; ?>">
+    </a>
+  </div>
+  <div class="media-body">
+    <h3 class="media-heading "><a target="_self" href="<?php echo r_url('thread-'.$vo['id']); ?>"><?php echo $vo['title'];if($vo['settop']==1){?>              
+                <span data-toggle="tooltip" data-placement="bottom" title="" data-original-title="站内顶置">
+					<i class="fa fa-arrow-circle-up"></i></span>
+              <?php } ?>   
+                </a></h3>
+    <div class="describ">
+                                    <p><?php echo $vo['description']; ?></p>
+    </div>
+     <div class="ask-bottom">
+     
+          <a href="<?php echo r_url('thread-'.$vo['id']); ?>" class="" target="_self">
+          	<i class="fa fa-comments"></i><?php echo $vo['reply']; ?> 个回复</a>
+          <a href="<?php echo r_url('thread-'.$vo['id']); ?>" class=" " target="_self"><i class="fa fa-star"></i><?php echo $vo['sc']; ?>个收藏</a>
+             </div>
+  </div>
+</div>
+       
+     </li>
+
+
+     <?php } ?>
+	 
+	</ul>
+	<ul class="pagination pull-left">
+			 <?php echo $pagination; ?>
+	     </ul>
+
+</div>
+				</div>
+				<div class="col-md-3 col-sm-12">
+					
+					<div class="r-aside bb ">
+        <div class="boxtitle"><span class="title">认证用户</span> 
+        	<a target="_self" href="<?php echo r_url('user-list'); ?>" class="more">更多<font> &gt;&gt; </font></a></div>
+        <ul class="exp-list">
+          <?php foreach($rz_userlist_3 as $key=>$vo) { ?>
+           <li>
+           	<div class="media">
+      <div class="media-left">
+        <a href="<?php echo r_url('user-'.$vo['id']); ?>" target="_self">
+          <img class="uk-comment-avatar media-object" src="<?php echo $vo['avatar_url'] ?>" data-holder-rendered="true" >
+        </a>
+      </div>
+      <div class="media-body">
+      	<h4 class="uk-comment-title media-heading">
+          <a href="<?php echo r_url('user-'.$vo['id']); ?>" target="_self"><?php echo $vo['nickname'] ?>
+          <?php if($vo['rz']>0) {
+
+            if($vo['rz']==1) { ?>
+          
+          <i class="fa fa-vimeo v_person   "></i>
+          <?php }else { ?>
+          <i class="fa fa-vimeo v_company   "></i>
+          <?php }} ?></a>
+        </h4>
+        
+      <div class="uk-comment-meta">
+			<p class="inst">文章数 : <?php echo $vo['extend']['topic_num'] ?>个</p>
+			<p class="inst">文档数 : <?php echo $vo['extend']['doc_num'] ?>个</p>
+													
+	  </div>
+ 
+
+      </div>
+    </div>
+	<p class="article"><?php if($vo['rz']>0) {
+                                            echo $vo['statusdes'];}else{
+                                            echo $vo['description'];
+                                            } ?></p>		  
+                                                    
+           </li>
+           <?php } ?>                                             
+                                                           
+            <?php if($uid>0){ ?>                                                                                                                                                              
+           <a target="_self" href="<?php echo r_url('user-rzuser'); ?>" class=" wi-margin-top btn-block btn btn-primary">申请认证</a>         
+          <?php } ?>     
+               </ul>
+     </div>
+					
+					
+					<div  class="r-aside recommend bb">
+         <div class="boxtitle"><span class="title">为你推荐</span> </div>
+         <ul class="art_list">
+      
+<?php foreach($tj_topiclist_6 as $key=>$vo) { ?>
+
+
+<li><a href="<?php echo r_url('thread-'.$vo['id']); ?>" title="<?php echo $vo['title']; ?>" target="_self"><?php echo $vo['title']; ?></a>
+               <div >
+               <span class="anum" > <?php echo $vo['reply']; ?> 个评论</span>
+               </div>
+              </li>
+
+<?php } ?>
+                               
+
+              </ul>
+     </div>
+					
+				</div>
+
+			</div>
+		</div>
+  </div>
+<?php include $conf['view_path'].'footer.inc.html';?>
+
