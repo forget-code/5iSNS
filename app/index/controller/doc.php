@@ -213,8 +213,16 @@ if(!in_array(2,$userqx['quanxian'])){
       $_SESSION['doc_create']['token'] = $token;
 		  $header['title'] = '文档发布';
 
-       
-		$taglist = topiccate_find(array('status'=>1),array('sort'=>'-1'),1,20);
+    if($conf['allow_cate_show']>0){
+       $taglist = topiccate_find(array('status'=>1),array('sort'=>'-1'),1,$conf['allow_cate_show']);
+    }else{
+       $taglist = topiccate_find_all(array('status'=>1),array('sort'=>'-1'));
+    }  
+		
+
+
+
+
 $filetypes         = include DATA_PATH . 'config/attach.conf.php';
 
 		include $conf['view_path'].'doc-create.html';
@@ -322,7 +330,14 @@ $token = xn_safe_key();
         $_SESSION['doc_edit']['token'] = $token;
 		$header['title'] = '文档编辑-'.$info['title'];
 
-		$taglist = topiccate_find(array('status'=>1),array('sort'=>'-1'),1,20);
+	
+        if($conf['allow_cate_show']>0){
+       $taglist = topiccate_find(array('status'=>1),array('sort'=>'-1'),1,$conf['allow_cate_show']);
+    }else{
+       $taglist = topiccate_find_all(array('status'=>1),array('sort'=>'-1'));
+    }  
+
+
 $filetypes         = include DATA_PATH . 'config/attach.conf.php';
 
 		include $conf['view_path'].'doc-edit.html';

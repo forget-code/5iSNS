@@ -477,9 +477,13 @@ $pagination = pagination(r_url('user-list', array('page' => 'pagenum')), $totaln
     $rzuser = db_find_one('rzuser', array('uid' => $uid));
     if ($method == 'GET') {
 
-       
+           if($conf['allow_cate_show']>0){
+       $taglist = topiccate_find(array('status'=>1),array('sort'=>'-1'),1,$conf['allow_cate_show']);
+    }else{
+       $taglist = topiccate_find_all(array('status'=>1),array('sort'=>'-1'));
+    }  
 
-        $taglist = topiccate_find(array('status' => 1), array('sort' => '-1'), 1, 20);
+        
         include $conf['view_path'] . 'user_rzuser.html';
 
     } else {
@@ -500,7 +504,7 @@ $pagination = pagination(r_url('user-list', array('page' => 'pagenum')), $totaln
         }
 
         if ($dataarr['cover_id'] == 0) {
-            message(-1, '扫描件必须上传');
+           // message(-1, '扫描件必须上传');
         }
         if ($dataarr['type'] == 0) {
             message(-1, '未选择认证类型');

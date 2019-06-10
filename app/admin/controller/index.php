@@ -95,6 +95,11 @@ unlink($conf['upload_path'] . 'update/data.sql');
 
 
 unlink($conf['upload_path'] . 'update/update.zip');
+
+
+if(!empty($result['config'])){
+	$config = $result['config'];
+}
 $config['version'] = $result['version'];
 
 file_replace_var(DATA_PATH.'config/conf.default.php', $config);

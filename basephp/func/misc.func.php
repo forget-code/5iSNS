@@ -1722,7 +1722,10 @@ function xn_url_parse($request_url)
         }else{
             $arr1 = 'index';
         }
-
+    if(stripos($front,'-')!==FALSE){//判断链接中是否含有-
+      
+        $url_rewrite_on=2;
+    }
     $arr2 = array();
     if (!empty($arr['query'])) {
         parse_str($arr['query'], $arr2);

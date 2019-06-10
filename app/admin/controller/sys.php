@@ -32,11 +32,11 @@ if(empty($action)) {
     if($result['domain']['status']==1){
     	if($result['domain']['type']==1){
     		$typename = '初级授权';
-    		$juli = '距离授权到期还有'.humanmiao($result['domain']['sq_time']+366*24*3600-time());
+    		$juli = '距离授权到期还有'.humanmiao($result['domain']['sq_time']+($result['domain']['xfnum']+1)*(24*366*3600)-time());
     	}
     	if($result['domain']['type']==2){
     		$typename = '高级授权';
-    		$juli = '距离授权到期还有'.humanmiao($result['domain']['sq_time']+366*24*3600-time());
+    		$juli = '距离授权到期还有'.humanmiao($result['domain']['sq_time']+($result['domain']['xfnum']+1)*(24*366*3600)-time());
     	}
     	if($result['domain']['type']==3){
     		$typename = '永久授权';
@@ -172,7 +172,23 @@ foreach ($topiclist as $key => $value) {
 
 	   }
 	}
- 	if($value['type']==6){//话题附件
+	 	if($value['type']==5){//话题附件
+		$rzuserinfo = db_find_one('rzuser',array('uid'=>$value['tid']));
+		if(!empty($rzuserinfo)){
+			if($value['id']!=$rzuserinfo['cover_id']){
+				
+				$unlink = true;
+			}else{
+				
+			}
+	    }else{
+
+		
+		$unlink = true;
+
+	   }
+	}
+ 	if($value['type']==6){//
 		$addonsinfo = db_find_one('addons',array('id'=>$value['tid']));
 		if(!empty($addonsinfo)){
 			if($value['mime']=='image'){//帖子附件

@@ -110,9 +110,6 @@ return array (
   'view_url' => 'view/',
   'upload_url' => 'upload/',
   'upload_path' => './upload/',
-  'logo_mobile_url' => 'public/common/images/logo.png',
-  'logo_pc_url' => 'public/common/images/logo.png',
-  'logo_water_url' => 'public/common/images/water-small.png',
   'sitename' => '5iSNS内容付费系统',
   'web_url' => 'http://www.5isns.com',
   'api_url' => 'http://api.imzaker.com:80',
@@ -123,25 +120,25 @@ return array (
   'timezone' => 'Asia/Shanghai',
   'runlevel' => 5,
   'runlevel_reason' => 'The site is under maintenance, please visit later.',
-  'cookie_domain' => '',
-  'cookie_path' => '',
-  'pagesize' => 10,
   'postlist_pagesize' => 100,
   'cache_thread_list_pages' => 10,
-  'online_update_span' => 120,
-  'online_hold_time' => 3600,
-  'session_delay_update' => 0,
+  'session_delay_update' => 0,//session延迟更新
   'upload_image_width' => 927,
-  'attach_dir_save_rule' => 'Ymd',
-  'update_views_on' => 1,
+  'admin_bind_ip' => 0,
+  'update_views_on' => 1,//是否更新帖子和文档的阅读量
+  'no_img_index'=>0,
+  'cookie_domain' => '',
+  'cookie_path' => '',
+  'online_hold_time' => 3600,// 活动时间
+  'allow_cate_show' => 20,
+  'choose_cate_num' => 2,
+  'pagesize' => 10,
   'user_create_email_on' => 0,
   'user_create_on' => 1,
   'user_resetpw_on' => 1,
-  'admin_bind_ip' => 0,
   'url_rewrite_on' => 0,
   'index_theme_name' => 'default',
-  'disabled_plugin' => 0,
-  'version' => '1.0.6',
+  'version' => '1.0.7',
   'static_version' => '?1.0',
   'cdn_use' => 0,
   'online_trans' => 0,
@@ -150,7 +147,6 @@ return array (
   array (
     0 => 'index',
     1 => 'admin',
-  
   ),
   'chongzhi' => 
   array (
@@ -162,8 +158,16 @@ return array (
   ),
   'alipay' => 
   array (
-    'md5Key' => '',
-    'appID' => '',
+    'app_id' => '',
+    'public_key' => '',
+    'private_key' => '',
+  ),
+  'paymethod' => 1,
+  'wechat' => 
+  array (
+    'mch_id' => '',
+    'app_id' => '',
+    'mch_key' => '',
   ),
 );
 ?>

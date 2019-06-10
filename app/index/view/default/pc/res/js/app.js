@@ -101,19 +101,36 @@ $('.layerform').on('submit', function() {
    $.xpost_async(url, postdata, function(code, ret) {
      
       if (code == 0) {
-        $.sns5i_notify(ret.message,'success','',1000,'',function(){
-       
 
-
-        });
         
         if(!xn.empty(ret.url)){
 
          window.open(ret.url);
 
         }
-        
-         layer.close(index); 
+        if(!xn.empty(ret.html)){
+
+          if(ret.method=='alipay'){
+  const newTab = window.open();
+  const div=document.createElement('divform');
+  div.innerHTML=ret.html;
+  newTab.document.body.appendChild(div);
+
+  newTab.document.forms.alipaysubmit.submit();
+   layer.close(index); 
+          }else{
+$(layero).html(ret.html);
+          }
+
+
+
+        }else{
+        $.sns5i_notify(ret.message,'success','',1000,'',function(){
+
+           layer.close(index); 
+        });
+        }
+       
         
       } else {
         $.sns5i_notify(ret.message,'danger');

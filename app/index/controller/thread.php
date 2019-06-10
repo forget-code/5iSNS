@@ -127,7 +127,11 @@ if($userqx['quanxian_limit_topic']>0){
 		$header['title'] = '帖子发布';
         $input['free'] = form_radio('free', array('0'=>'免费','1'=>'付费','2'=>'部分内容付费'),0);
        
-		$taglist = topiccate_find(array('status'=>1),array('sort'=>'-1'),1,20);
+		    if($conf['allow_cate_show']>0){
+       $taglist = topiccate_find(array('status'=>1),array('sort'=>'-1'),1,$conf['allow_cate_show']);
+    }else{
+       $taglist = topiccate_find_all(array('status'=>1),array('sort'=>'-1'));
+    }  
 
         $filetypes         = include DATA_PATH . 'config/attach.conf.php';
 
@@ -224,7 +228,11 @@ $token = xn_safe_key();
         $_SESSION['thread_edit']['token'] = $token;
 		$header['title'] = '帖子编辑-'.$info['title'];
 $input['free'] = form_radio('free', array('0'=>'免费','1'=>'付费','2'=>'部分内容付费'),$info['free']);
-		$taglist = topiccate_find(array('status'=>1),array('sort'=>'-1'),1,20);
+		    if($conf['allow_cate_show']>0){
+       $taglist = topiccate_find(array('status'=>1),array('sort'=>'-1'),1,$conf['allow_cate_show']);
+    }else{
+       $taglist = topiccate_find_all(array('status'=>1),array('sort'=>'-1'));
+    }  
 $filetypes         = include DATA_PATH . 'config/attach.conf.php';
 
 		include $conf['view_path'].'thread-edit.html';

@@ -581,14 +581,19 @@ foreach($vo['child'] as $k=>$v){
             	 	 <div class="message"><textarea placeholder="给Ta留言…" name="content"></textarea></div></div> 
             	<div class="reward-info text-center"><span class="amount" id="totalnum">￥0</span> </div> 
             	<div class="choose-pay">
-            		<!-- <input id="method1" type="radio" name="pay_method" value="weixin"> 
+            		
+<?php if($conf['paymethod']==3||$conf['paymethod']==2){ ?>
+            		<input id="method1" type="radio" name="pay_method" value="weixin"> 
             		<label for="method1" class="option">
-            			<img src="./public/common/images/wechat.png" class="day wechat">
-            		</label> -->
+            			<img src="/public/common/images/wechat.png" class="day wechat">
+            		</label>
+<?php } ?>
+<?php if($conf['paymethod']==3||$conf['paymethod']==1){ ?>
             		<input id="method2" type="radio" name="pay_method" value="alipay"> 
             		<label for="method2" class="option">
-            			<img src="./public/common/images/alipay.png" class="day alipay"> 
+            			<img src="/public/common/images/alipay.png" class="day alipay"> 
             		</label> 
+<?php } ?>
             		<input id="method3" type="radio" name="pay_method" value="caifu"> 
                     <label for="method3" class="option">
             			<span style="display:block;margin-top:-13px;"><?php echo $conf['pointname']['point']; ?></span> 

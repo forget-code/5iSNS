@@ -36,7 +36,7 @@
   </div>   
   </div>
 </div>
-                    <p class="wi-margin-top text-warning small">请谨慎选择上传文档，尤其涉及版权纠纷、他人权益的，禁止上传。可上传类型为<?php echo implode(',',$filetypes['attach']); ?>。文件大小不大于<?php echo humansize($filetypes['filesize']); ?></p>
+                    <p class="wi-margin-top text-warning small">请谨慎选择上传文档，尤其涉及版权纠纷、他人权益的，禁止上传。可上传类型为<?php echo implode(',',$filetypes['doc']); ?>。文件大小不大于<?php echo humansize($filetypes['filesize']); ?></p>
                 </div>
             </div>
 <?php } ?>
@@ -123,9 +123,7 @@
  
 		</div></div></div></div></div>
 <?php include $conf['view_path'].'footer.inc.html';?>
-  <link href="<?php echo $conf['public_dir']; ?>fcup/css/style.css" rel="stylesheet" />
-        <script src="<?php echo $conf['public_dir']; ?>fcup/js/jquery.fcup.js">
-        </script>
+
 <script type="text/javascript">
   
             $(function(){
@@ -248,10 +246,11 @@ $("#tpt_pre a:contains('" + tag + "')").map(function(){
     });
     $("#tpt_pre").on('click', 'a:not(.selected)', function() {
             var length = $("#tpt_pre").find('a.selected').length;
-      if(length>=3){
+      var limitlength = "<?php echo $conf['choose_cate_num']; ?>"
+      if(length>=limitlength&&limitlength>0){
 
-       //$.sns5i_notify('最多选择三个','danger');
-       // return false;
+       $.sns5i_notify('最多选择'+limitlength+'个话题','danger');
+        return false;
       }
       var name = "keywords";
       var tags = $.trim($("input[name=" + name + "]").val());

@@ -10,8 +10,8 @@
                                } 
                      ?> 
 		
-		<span><a hidefocus="true" href="/sitemap.xml">站内文章地图</a></span>
-		<span><a hidefocus="true" href="/sitemap.xml" title="站内文档地图">站内文档地图</a></span>
+		<span><a hidefocus="true" href="/sitemap.xml">站内地图</a></span>
+		
 
 		</div>
 		<div class="footCpy">
@@ -39,6 +39,6 @@
 <script src="<?php echo $conf['public_view_dir']; ?>res/js/app.js"></script>
 
 
-
+<?php echo  $plugin->run('tongji','show'); ?>
 </body>
 </html>

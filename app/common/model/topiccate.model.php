@@ -74,7 +74,13 @@ function topiccate_delete($id) {
 
 	return $r;
 }
-
+function topiccate_find_all($cond = array(), $orderby = array('sort'=>-1)) {
+  
+  $topiccatelist = db_find_all('topiccate',$cond, $orderby);
+  if($topiccatelist) foreach ($topiccatelist as &$topiccate) topiccate_format($topiccate);
+  
+  return $topiccatelist;
+}
 function topiccate_find($cond = array(), $orderby = array('sort'=>-1), $page = 1, $pagesize = 1000) {
 	
 	$topiccatelist = topiccate__find($cond, $orderby, $page, $pagesize);

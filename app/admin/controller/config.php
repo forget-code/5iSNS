@@ -30,11 +30,12 @@ if(empty($conf['online_trans_num'])){
         $input['beinum'] = form_text('beinum', $conf['beinum']);
         $input['web_url'] = form_text('web_url', $conf['web_url']);
         $input['appid'] = form_text('appid', $conf['appid']);
-        
+        $input['allow_cate_show'] = form_text('allow_cate_show', $conf['allow_cate_show']);
+        $input['choose_cate_num'] = form_text('choose_cate_num', $conf['choose_cate_num']);
 
         $input['shuiyin'] = form_text('shuiyin', $conf['shuiyin']);
         $input['url_rewrite_on'] = form_radio('url_rewrite_on', array('0'=>'关闭','1'=>'打开'),$conf['url_rewrite_on']);
- $input['update_views_on'] = form_radio('update_views_on', array('0'=>'无图首页','1'=>'有图首页'),$conf['update_views_on']);
+ $input['no_img_index'] = form_radio('no_img_index', array('0'=>'无图首页','1'=>'有图首页'),$conf['no_img_index']);
 
         $input['sy_type'] = form_radio('sy_type', array('0'=>'关闭','1'=>'文字','2'=>'图片'),$conf['sy_type']);
         $input['user_create_on'] = form_radio_yes_no('user_create_on', $conf['user_create_on']);
@@ -55,8 +56,11 @@ if(empty($conf['online_trans_num'])){
         $web_url = param('web_url', '', FALSE);
         $appid = param('appid', '', FALSE);
        
+     
+$allow_cate_show = param('allow_cate_show', 0);
+$choose_cate_num = param('choose_cate_num', 0);
 
-        $update_views_on = param('update_views_on', 0);
+        $no_img_index = param('no_img_index', 0);
 
         $shuiyin = param('shuiyin', '', FALSE);
         $sy_type = param('sy_type', 0);
@@ -73,7 +77,7 @@ if(empty($conf['online_trans_num'])){
         $replace['beinum'] = $beinum;
         $replace['web_url'] = $web_url;
         $replace['appid'] = $appid;
-        $replace['update_views_on'] = $update_views_on;
+        $replace['no_img_index'] = $no_img_index;
         $replace['shuiyin'] = $shuiyin;
         $replace['sy_type'] = $sy_type;
         $replace['url_rewrite_on'] = $url_rewrite_on;
@@ -84,7 +88,8 @@ if(empty($conf['online_trans_num'])){
         $replace['user_resetpw_on'] = $user_resetpw_on;
         $replace['online_trans'] = $online_trans;
         $replace['cdn_use'] = $cdn_use;
-        
+         $replace['allow_cate_show'] = $allow_cate_show;
+          $replace['choose_cate_num'] = $choose_cate_num;
         
         file_replace_var(DATA_PATH.'config/conf.default.php', $replace);
        
@@ -94,8 +99,17 @@ if(empty($conf['online_trans_num'])){
     if($method == 'GET') {
 
         $input = array();
-        $input['alipay']['appID'] = form_text('appID', $conf['alipay']['appID']);
-        $input['alipay']['md5Key'] = form_text('md5Key', $conf['alipay']['md5Key']);
+        $input['paymethod'] = form_radio('paymethod', array('0'=>'关闭','1'=>'支付宝'),$conf['paymethod']);
+        
+        $input['alipay']['app_id'] = form_text('alipay_app_id', $conf['alipay']['app_id']);
+        $input['alipay']['public_key'] = form_text('alipay_public_key', $conf['alipay']['public_key']);
+        $input['alipay']['private_key'] = form_text('alipay_private_key', $conf['alipay']['private_key']);
+
+
+        $input['wechat']['mch_id'] = form_text('wechat_mch_id', $conf['wechat']['mch_id']);
+$input['wechat']['app_id'] = form_text('wechat_app_id', $conf['wechat']['app_id']);
+$input['wechat']['mch_key'] = form_text('wechat_mch_key', $conf['wechat']['mch_key']);
+
         $input['chongzhi']['bili'] = form_text('czbili', $conf['chongzhi']['bili']);
         $input['tixian']['bili'] = form_text('txbili', $conf['tixian']['bili']);
         
@@ -105,8 +119,16 @@ if(empty($conf['online_trans_num'])){
         
         $czbili = param('czbili', '', FALSE);
         $txbili = param('txbili', '', FALSE);
-        $md5Key = param('md5Key', '', FALSE);
-        $appID = param('appID', '', FALSE);
+        $paymethod = param('paymethod', 0);
+        $alipay_public_key = param('alipay_public_key', '', FALSE);
+        $alipay_app_id = param('alipay_app_id', '', FALSE);
+        $alipay_private_key = param('alipay_private_key', '', FALSE);
+
+        $wechat_mch_id = param('wechat_mch_id', '', FALSE);
+        $wechat_app_id = param('wechat_app_id', '', FALSE);
+        $wechat_mch_key = param('wechat_mch_key', '', FALSE);
+
+
     if(intval($czbili)<1){
          message(-1, '请填写大于1的整数');
     }
@@ -116,9 +138,13 @@ if(empty($conf['online_trans_num'])){
         $replace = array();
         $replace['chongzhi']['bili'] = intval($czbili);
         $replace['tixian']['bili'] = intval($txbili);
-        $replace['alipay']['md5Key'] = $md5Key;
-        $replace['alipay']['appID'] = $appID;
-     
+        $replace['alipay']['app_id'] = $alipay_app_id;
+        $replace['alipay']['public_key'] = $alipay_public_key;
+        $replace['alipay']['private_key'] = $alipay_private_key;
+        $replace['wechat']['mch_id'] = $wechat_mch_id;
+        $replace['wechat']['app_id'] = $wechat_app_id;
+        $replace['wechat']['mch_key'] = $wechat_mch_key;
+        $replace['paymethod'] = $paymethod;
         file_replace_var(DATA_PATH.'config/conf.default.php', $replace);
        
         message(0, '修改成功');

@@ -33,7 +33,7 @@ CREATE TABLE `5isns_file` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '文件ID',
   `uid` int(11) NOT NULL DEFAULT '0' COMMENT '我的附件，便于清理附件',
   `tid` int(11) NOT NULL DEFAULT '0' COMMENT '我的帖子id',
-  `type` tinyint(1) NOT NULL DEFAULT '0' COMMENT '0正常1帖子2文档3话题4会员组5认证材料',  
+  `type` tinyint(1) NOT NULL DEFAULT '0' COMMENT '0正常1帖子2文档3话题4会员组5认证材料6空7评论',  
   `name` varchar(100) NOT NULL DEFAULT '' COMMENT '原始文件名',
   `savename` varchar(100) NOT NULL DEFAULT '' COMMENT '保存名称',
   `savepath` varchar(255) NOT NULL DEFAULT '' COMMENT '文件保存路径',

@@ -1,55 +1,93 @@
 <?php
 
-require EXTEND_PATH . 'pay/Alipay/SDK.php';
-require EXTEND_PATH . 'pay/Alipay/Params/Pay/Request.php';
-require EXTEND_PATH . 'pay/Alipay/Params/PublicParams.php';
+
+require EXTEND_PATH . 'pay-php-sdk/init.php';
+$config['alipay']['notify_url'] = $conf['web_url'] . '/zhifu-pay_notify_url.htm';
+$config['alipay']['return_url'] = $conf['web_url'] . '/zhifu-pay_return_url.htm';
+$config['alipay']['debug'] = false;
+$config['alipay']['app_id'] = $conf['alipay']['app_id'];
+$config['alipay']['public_key'] = $conf['alipay']['public_key'];  
+$config['alipay']['private_key'] = $conf['alipay']['private_key'];
+ $config['wechat']['debug'] = false;
+ $config['wechat']['app_id'] = $conf['wechat']['app_id'];
+ $config['wechat']['mch_id'] = $conf['wechat']['mch_id'];
+ $config['wechat']['mch_key'] = $conf['wechat']['mch_key'];
+ $config['wechat']['ssl_cer'] = '';
+ $config['wechat']['ssl_key'] = '';
+$config['wechat']['notify_url'] = $conf['web_url'] . '/zhifu-pay_notify_url.htm';
+$config['wechat']['return_url'] = $conf['web_url'] . '/zhifu-pay_return_url.htm';
 
 function pay($pay_method,$subject,$extra) {
-    global $conf;
+    global $config,$conf;
     $url = '';
-	if ($pay_method == 'alipay') {
+
+	
 		$out_trade_no = xn_safe_key();
-		$extra['type'] = 1;
+		
+$out_trade_no_info = db_find_one('chongzhi',array('out_trade_no'=>$out_trade_no));
+if($out_trade_no_info){
+   $out_trade_no .=time();
+   $out_trade_no = xn_substr($out_trade_no,0,32);
+}
+if ($pay_method == 'alipay') {
+    $type=1;
+}else{
+    $type=2;
+}
+        $extra['type'] = $type;
         $extra['out_trade_no'] = $out_trade_no;
         $extra['create_time'] = time();
 
         $result = db_create('chongzhi', $extra);
         if ($result) {
 
-            $params         = new \Yurun\PaySDK\Alipay\Params\PublicParams;
-            $params->appID  = $conf['alipay']['appID'];
-            $params->md5Key = $conf['alipay']['md5Key'];
-            $pay            = new \Yurun\PaySDK\Alipay\SDK($params);
 
-            // 支付接口
-            $request                               = new \Yurun\PaySDK\Alipay\Params\Pay\Request;
-            $request->notify_url                   = $conf['web_url'] . '/zhifu-pay_notify_url'; // 支付后通知地址（作为支付成功回调，这个可靠）
-            $request->return_url                   = $conf['web_url'] . '/zhifu-pay_return_url'; // 支付后跳转返回地址
-            $request->businessParams->seller_id    = $conf['alipay']['appID']; // 卖家支付宝用户号
-            $request->businessParams->out_trade_no = $out_trade_no; // 商户订单号
-            $request->businessParams->total_fee    = $extra['rmb']; // 价格
-            $request->businessParams->subject      = $subject; // 商品标题
+ 
+$pay = new \Pay\Pay($config);
+if ($pay_method == 'alipay') {
+$options = [
+    'out_trade_no' => $out_trade_no, // 商户订单号
+    'total_amount' => $extra['rmb'], // 支付金额
+    'subject'      => $subject, // 支付订单描述
+];
+return  $pay->driver('alipay')->gateway('web')->apply($options);
 
-            $url = $pay->redirectExecute($request, true);
-          
+}else{
+$options = [
+    'out_trade_no'     => $out_trade_no, // 订单号
+    'total_fee'        => 1,//$extra['rmb']*100 // 订单金额，**单位：分**
+    'body'             => $subject, // 订单描述
+    'product_id'       => $extra['actiontype'], // 订单商品 ID
+];
+$result = $pay->driver('wechat')->gateway('scan')->apply($options);
+$img = downloaderweima($result,$out_trade_no);
+$n = '<div><img src="'.$conf['web_url'] .$img.'" /></div>';
+return $n;
+}
+ 
          
           
         }else{
         	message(-1, '支付失败');
         }
-	}
-
-
-	return $url;
 }
-function return_check(){
-	    global $conf;
-	    $params         = new \Yurun\PaySDK\Alipay\Params\PublicParams;
-        $params->appID  = $conf['alipay']['appID'];
-        $params->md5Key = $conf['alipay']['md5Key'];
-        $pay            = new \Yurun\PaySDK\Alipay\SDK($params);
-        $verify_result  = $pay->verifyCallback($_GET);
-        return $verify_result;
+
+function return_check($type,$post=false){
+	   global $config;
+       $pay = new \Pay\Pay($config);
+
+       if($post){
+
+         $data = $_POST; 
+       }else{
+        $data = $_GET; 
+       }
+       if($type==2){
+        return $pay->driver('wechat')->gateway('mp')->verify(file_get_contents('php://input'));
+       }else{
+        return $pay->driver('alipay')->gateway()->verify($data,$data['sign']);
+       }
+       
 }
 
 

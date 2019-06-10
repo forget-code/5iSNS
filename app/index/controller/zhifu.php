@@ -50,7 +50,7 @@ if ($action == 'dashang') {
         $extra['errorcode']  = $content;
         $url                 = pay($pay_method, '帖子打赏', $extra);
         if (!empty($url)) {
-            message(0, '跳转支付页面', array('url' => $url));
+            message(0, '跳转支付页面', array('html' => $url,'method'=>$pay_method));
         } else {
             message(-1, '支付失败');
         }
@@ -75,8 +75,9 @@ if ($action == 'dashang') {
     $extra['rmb']        = $chongzhi;
 
     $url = pay($pay_method, '积分充值', $extra);
+
     if (!empty($url)) {
-        message(0, '跳转支付页面', array('url' => $url));
+        message(0, '跳转支付页面', array('html' => $url,'method'=>$pay_method));
     } else {
         message(-1, '支付失败');
     }
@@ -91,9 +92,9 @@ if ($action == 'dashang') {
     $trade_status        = param('trade_status');
     $map['out_trade_no'] = $out_trade_no;
     $info                = db_find_one('chongzhi', $map);
-    if ($info['type'] == 1) {
+    
 
-        $verify_result = return_check();
+        $verify_result = return_check($info['type'],false);
 
         if ($verify_result) {
 
@@ -147,9 +148,9 @@ if ($action == 'dashang') {
             echo "fail";
 
         }
-    }
+    
 } elseif ($action == 'pay_notify_url') {
-
+ file_put_contents('notify.txt', "收到来自微信的异步通知\r\n", FILE_APPEND);
     $out_trade_no = param('out_trade_no');
     //支付宝交易号
 
@@ -159,9 +160,10 @@ if ($action == 'dashang') {
     $trade_status        = param('trade_status');
     $map['out_trade_no'] = $out_trade_no;
     $info                = db_find_one('chongzhi', $map);
-    if ($info['type'] == 1) {
+    
 
-        $verify_result = return_check();
+        $verify_result = return_check($info['type'],true);
+
 
         if ($verify_result) {
 //验证成功
@@ -210,5 +212,5 @@ if ($action == 'dashang') {
             echo "fail";
 
         }
-    }
+   
 }
